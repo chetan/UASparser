@@ -17,9 +17,9 @@ import cz.mallat.uasparser.fileparser.Section;
 
 /**
  * User agent parser.
- * 
+ *
  * @author oli
- * 
+ *
  */
 public class UASparser {
 
@@ -33,24 +33,33 @@ public class UASparser {
 	private Map<Long, Long> browserOsMap;
 	private Map<String, Long> osRegMap;
 
+	private Map<Pattern, Long> compiledBrowserRegMap;
+	private Map<Pattern, Long> compiledOsRegMap;
+
+	private UserAgentInfo unknownAgentInfo;
+
 	/**
 	 * Use the given filename to load the definition file from the local filesystem
-	 * 
+	 *
 	 * @param localDefinitionFilename
 	 * @throws IOException
 	 */
 	public UASparser(String localDefinitionFilename) throws IOException {
 		loadDataFromFile(new File(localDefinitionFilename));
+		unknownAgentInfo = new UserAgentInfo();
+		preCompileRegExes();
 	}
 
 	/**
 	 * Use the given inputstream to load the definition file from the local filesystem
-	 * 
+	 *
 	 * @param inputStreamToDefinitionFile
 	 * @throws IOException
 	 */
 	public UASparser(InputStream inputStreamToDefinitionFile) throws IOException {
 		loadDataFromFile(inputStreamToDefinitionFile);
+		unknownAgentInfo = new UserAgentInfo();
+		preCompileRegExes();
 	}
 
 	/**
@@ -69,7 +78,7 @@ public class UASparser {
 
 	/**
 	 * Parse the given user agent string and returns a UserAgentInfo object with the related data
-	 * 
+	 *
 	 * @param useragent
 	 * @throws IOException
 	 *             may happen when the retrieval of the data file fails
@@ -100,15 +109,62 @@ public class UASparser {
 	}
 
 	/**
+	 * Parse the given user agent string and returns a UserAgentInfo object
+	 * with only the related Browser data set.
+	 *
+	 * @param useragent
+	 * @return {@link UserAgentInfo}
+	 */
+	public UserAgentInfo parseBrowserOnly(String useragent) {
+
+		if (useragent == null) {
+			return unknownAgentInfo;
+		}
+
+		UserAgentInfo retObj = new UserAgentInfo();
+		processBrowserRegex(useragent, retObj);
+		return retObj;
+	}
+
+	/**
+	 * Precompile all regular regexes
+	 */
+	private void preCompileRegExes() {
+		preCompileBrowserRegMap();
+		preCompileOsRegMap();
+	}
+
+	/**
+	 * Precompile browser regexes
+	 */
+	private void preCompileBrowserRegMap() {
+		compiledBrowserRegMap = new HashMap<Pattern, Long>(browserRegMap.size());
+		for (Map.Entry<String, Long> entry : browserRegMap.entrySet()) {
+			Pattern pattern = Pattern.compile(entry.getKey(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+			compiledBrowserRegMap.put(pattern, entry.getValue());
+		}
+	}
+
+	/**
+	 * Precompile OS regexes
+	 */
+	private void preCompileOsRegMap() {
+		compiledOsRegMap = new HashMap<Pattern, Long>(osRegMap.size());
+		for (Map.Entry<String, Long> entry : osRegMap.entrySet()) {
+			Pattern pattern = Pattern.compile(entry.getKey(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+			compiledOsRegMap.put(pattern, entry.getValue());
+		}
+	}
+
+	/**
 	 * Searches in the os regex table. if found a match copies the os data
-	 * 
+	 *
 	 * @param useragent
 	 * @param retObj
 	 */
 	private void processOsRegex(String useragent, UserAgentInfo retObj) {
-		for (Map.Entry<String, Long> entry : osRegMap.entrySet()) {
-			Pattern pattern = Pattern.compile(entry.getKey(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-			Matcher matcher = pattern.matcher(useragent);
+		for (Map.Entry<Pattern, Long> entry : compiledOsRegMap.entrySet()) {
+			Matcher matcher = entry.getKey().matcher(useragent);
 			if (matcher.find()) {
 				// simply copy the OS data into the result object
 				Long idOs = entry.getValue();
@@ -123,16 +179,15 @@ public class UASparser {
 
 	/**
 	 * Searchs in the browser regex table. if found a match copies the browser data and if possible os data
-	 * 
+	 *
 	 * @param useragent
 	 * @param retObj
 	 * @return
 	 */
 	private boolean processBrowserRegex(String useragent, UserAgentInfo retObj) {
 		boolean osFound = false;
-		for (Map.Entry<String, Long> entry : browserRegMap.entrySet()) {
-			Pattern pattern = Pattern.compile(entry.getKey(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-			Matcher matcher = pattern.matcher(useragent);
+		for (Map.Entry<Pattern, Long> entry : compiledBrowserRegMap.entrySet()) {
+			Matcher matcher = entry.getKey().matcher(useragent);
 			if (matcher.find()) {
 				// if a browse was found...
 				Long idBrowser = entry.getValue();
@@ -166,7 +221,7 @@ public class UASparser {
 
 	/**
 	 * Sets the source type, if possible
-	 * 
+	 *
 	 * @param retObj
 	 * @param idBrowser
 	 */
@@ -185,7 +240,7 @@ public class UASparser {
 
 	/**
 	 * Checks if the useragent comes from a robot. if yes copies all the data to the result object
-	 * 
+	 *
 	 * @param useragent
 	 * @param retObj
 	 * @return true if the useragent belongs to a robot, else false
@@ -208,7 +263,7 @@ public class UASparser {
 
 	/**
 	 * loads the data file and creates all internal data structs
-	 * 
+	 *
 	 * @param definitionFile
 	 * @throws IOException
 	 */
@@ -219,7 +274,7 @@ public class UASparser {
 
 	/**
 	 * loads the data file and creates all internal data structs
-	 * 
+	 *
 	 * @param is
 	 * @throws IOException
 	 */
@@ -230,7 +285,7 @@ public class UASparser {
 
 	/**
 	 * Creates the internal data structes from the seciontList
-	 * 
+	 *
 	 * @param sectionList
 	 */
 	protected void createInternalDataStructre(List<Section> sectionList) {
@@ -284,11 +339,12 @@ public class UASparser {
 				osRegMap = osRegMapTmp;
 			}
 		}
+		preCompileRegExes();
 	}
 
 	/**
 	 * Converts a PERL style regex into the Java style. That means in removes the leading and the last / and removes the modifiers
-	 * 
+	 *
 	 * @param regex
 	 * @return
 	 */
