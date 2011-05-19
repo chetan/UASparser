@@ -19,7 +19,7 @@ public class TestParsers {
 
 	@Test
 	public void runUAParser() throws IOException {
-		UASparser p = new UASparser(Thread.currentThread().getContextClassLoader().getResourceAsStream("data.txt"));
+		UASparser p = new UASparser(getClass().getClassLoader().getResourceAsStream("data.txt"));
 		UserAgentInfo uai = p.parse("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.12) Gecko/2009070611 Firefox/3.0.12");
 		System.out.println("type:" + uai.getTyp());
 		System.out.println("ua_name:" + uai.getUaName());
