@@ -25,18 +25,18 @@ public class UASparser {
 
 	static final String INFO_URL = "http://user-agent-string.info";
 
-	private Map<String, RobotEntry> robotsMap;
-	private Map<Long, OsEntry> osMap;
-	private Map<Long, BrowserEntry> browserMap;
-	private Map<Long, String> browserTypeMap;
-	private Map<String, Long> browserRegMap;
-	private Map<Long, Long> browserOsMap;
-	private Map<String, Long> osRegMap;
+	protected Map<String, RobotEntry> robotsMap;
+	protected Map<Long, OsEntry> osMap;
+	protected Map<Long, BrowserEntry> browserMap;
+	protected Map<Long, String> browserTypeMap;
+	protected Map<String, Long> browserRegMap;
+	protected Map<Long, Long> browserOsMap;
+	protected Map<String, Long> osRegMap;
 
-	private Map<Pattern, Long> compiledBrowserRegMap;
-	private Map<Pattern, Long> compiledOsRegMap;
+	protected Map<Pattern, Long> compiledBrowserRegMap;
+	protected Map<Pattern, Long> compiledOsRegMap;
 
-	private UserAgentInfo unknownAgentInfo;
+	protected UserAgentInfo unknownAgentInfo;
 
 	/**
 	 * Use the given filename to load the definition file from the local filesystem
@@ -47,7 +47,6 @@ public class UASparser {
 	public UASparser(String localDefinitionFilename) throws IOException {
 		loadDataFromFile(new File(localDefinitionFilename));
 		unknownAgentInfo = new UserAgentInfo();
-		preCompileRegExes();
 	}
 
 	/**
@@ -59,7 +58,6 @@ public class UASparser {
 	public UASparser(InputStream inputStreamToDefinitionFile) throws IOException {
 		loadDataFromFile(inputStreamToDefinitionFile);
 		unknownAgentInfo = new UserAgentInfo();
-		preCompileRegExes();
 	}
 
 	/**
@@ -129,7 +127,7 @@ public class UASparser {
 	/**
 	 * Precompile all regular regexes
 	 */
-	private void preCompileRegExes() {
+	protected void preCompileRegExes() {
 		preCompileBrowserRegMap();
 		preCompileOsRegMap();
 	}
@@ -137,8 +135,8 @@ public class UASparser {
 	/**
 	 * Precompile browser regexes
 	 */
-	private void preCompileBrowserRegMap() {
-		compiledBrowserRegMap = new HashMap<Pattern, Long>(browserRegMap.size());
+	protected void preCompileBrowserRegMap() {
+		compiledBrowserRegMap = new LinkedHashMap<Pattern, Long>(browserRegMap.size());
 		for (Map.Entry<String, Long> entry : browserRegMap.entrySet()) {
 			Pattern pattern = Pattern.compile(entry.getKey(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 			compiledBrowserRegMap.put(pattern, entry.getValue());
@@ -148,8 +146,8 @@ public class UASparser {
 	/**
 	 * Precompile OS regexes
 	 */
-	private void preCompileOsRegMap() {
-		compiledOsRegMap = new HashMap<Pattern, Long>(osRegMap.size());
+	protected void preCompileOsRegMap() {
+		compiledOsRegMap = new LinkedHashMap<Pattern, Long>(osRegMap.size());
 		for (Map.Entry<String, Long> entry : osRegMap.entrySet()) {
 			Pattern pattern = Pattern.compile(entry.getKey(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 			compiledOsRegMap.put(pattern, entry.getValue());
