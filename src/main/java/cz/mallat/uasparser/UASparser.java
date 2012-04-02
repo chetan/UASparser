@@ -8,9 +8,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import jregex.Matcher;
+import jregex.Pattern;
 import cz.mallat.uasparser.fileparser.Entry;
 import cz.mallat.uasparser.fileparser.PHPFileParser;
 import cz.mallat.uasparser.fileparser.Section;
@@ -138,7 +138,7 @@ public class UASparser {
     protected void preCompileBrowserRegMap() {
         compiledBrowserRegMap = new LinkedHashMap<Pattern, Long>(browserRegMap.size());
         for (Map.Entry<String, Long> entry : browserRegMap.entrySet()) {
-            Pattern pattern = Pattern.compile(entry.getKey(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+            Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
             compiledBrowserRegMap.put(pattern, entry.getValue());
         }
     }
@@ -149,7 +149,7 @@ public class UASparser {
     protected void preCompileOsRegMap() {
         compiledOsRegMap = new LinkedHashMap<Pattern, Long>(osRegMap.size());
         for (Map.Entry<String, Long> entry : osRegMap.entrySet()) {
-            Pattern pattern = Pattern.compile(entry.getKey(), Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+            Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
             compiledOsRegMap.put(pattern, entry.getValue());
         }
     }
@@ -187,7 +187,7 @@ public class UASparser {
         for (Map.Entry<Pattern, Long> entry : compiledBrowserRegMap.entrySet()) {
             Matcher matcher = entry.getKey().matcher(useragent);
             if (matcher.find()) {
-                // if a browse was found...
+                // if a browser was found...
                 Long idBrowser = entry.getValue();
                 // ... but the browser type from browser type map into the typ
                 copyType(retObj, idBrowser);
@@ -244,9 +244,10 @@ public class UASparser {
      * @return true if the useragent belongs to a robot, else false
      */
     private boolean processRobot(String useragent, UserAgentInfo retObj) {
-        if (robotsMap.containsKey(useragent)) {
+        String lcUserAgent = useragent.toLowerCase();
+        if (robotsMap.containsKey(lcUserAgent)) {
             retObj.setTyp("Robot");
-            RobotEntry robotEntry = robotsMap.get(useragent);
+            RobotEntry robotEntry = robotsMap.get(lcUserAgent);
             robotEntry.copyTo(retObj);
             if (robotEntry.getOsId() != null) {
                 OsEntry os = osMap.get(robotEntry.getOsId());
