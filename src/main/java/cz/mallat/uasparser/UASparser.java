@@ -187,14 +187,10 @@ public class UASparser {
         for (Map.Entry<Pattern, Long> entry : compiledBrowserRegMap.entrySet()) {
             Matcher matcher = entry.getKey().matcher(useragent);
             if (matcher.find()) {
-                // if a browser was found...
                 Long idBrowser = entry.getValue();
-                // ... but the browser type from browser type map into the typ
-                copyType(retObj, idBrowser);
-                // get all the browser data from the browser map
                 BrowserEntry be = browserMap.get(idBrowser);
                 if (be != null) {
-                    // first try to get the browser version from the first subgroup of the regex
+                    copyType(retObj, be);
                     String browserVersionInfo = null;
                     if (matcher.groupCount() > 0) {
                         browserVersionInfo = matcher.group(1);
@@ -221,19 +217,18 @@ public class UASparser {
      * Sets the source type, if possible
      *
      * @param retObj
-     * @param idBrowser
+     * @param be
      */
-    private void copyType(UserAgentInfo retObj, Long idBrowser) {
-        BrowserEntry be = browserMap.get(idBrowser);
-        if (be != null) {
-            Long type = be.getType();
-            if (type != null) {
-                String typeString = browserTypeMap.get(type);
-                if (typeString != null) {
-                    retObj.setTyp(typeString);
-                }
-            }
+    private void copyType(UserAgentInfo retObj, BrowserEntry be) {
+        Long type = be.getType();
+        if (type == null) {
+            return;
         }
+        String typeString = browserTypeMap.get(type);
+        if (typeString == null) {
+            return;
+        }
+        retObj.setTyp(typeString);
     }
 
     /**

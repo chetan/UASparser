@@ -2,11 +2,13 @@ package cz.mallat.uasparser;
 
 /**
  * JavaBean that returns the data to the calling user from UAParser.parse()
- * 
+ *
  * @author oli
- * 
+ *
  */
 public class UserAgentInfo {
+
+    private static final String UNKNOWN = "unknown";
 
 	private String typ;
 	private String uaFamily;
@@ -24,20 +26,20 @@ public class UserAgentInfo {
 	private String osIcon;
 
 	public UserAgentInfo() {
-		this.typ = "unknown";
-		this.uaFamily = "unknown";
-		this.uaName = "unknown";
-		this.uaUrl = "unknown";
-		this.uaCompany = "unknown";
-		this.uaCompanyUrl = "unknown";
-		this.uaIcon = "unknown";
-		this.uaInfoUrl = "unknown";
-		this.osFamily = "unknown";
-		this.osName = "unknown";
-		this.osUrl = "unknown";
-		this.osCompany = "unknown";
-		this.osCompanyUrl = "unknown";
-		this.osIcon = "unknown";
+        this.typ = UNKNOWN;
+		this.uaFamily = UNKNOWN;
+		this.uaName = UNKNOWN;
+		this.uaUrl = UNKNOWN;
+		this.uaCompany = UNKNOWN;
+		this.uaCompanyUrl = UNKNOWN;
+		this.uaIcon = UNKNOWN;
+		this.uaInfoUrl = UNKNOWN;
+		this.osFamily = UNKNOWN;
+		this.osName = UNKNOWN;
+		this.osUrl = UNKNOWN;
+		this.osCompany = UNKNOWN;
+		this.osCompanyUrl = UNKNOWN;
+		this.osIcon = UNKNOWN;
 	}
 
 	public String getTyp() {
