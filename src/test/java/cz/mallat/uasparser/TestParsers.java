@@ -27,7 +27,7 @@ public class TestParsers {
         // os_family:Windows
         // os_producer:Microsoft Corporation.
 
-        assertEquals("Browser", uai.getTyp());
+        assertEquals("Browser", uai.getType());
         assertEquals("Firefox 3.0.12", uai.getUaName());
         assertEquals("Firefox", uai.getUaFamily());
         assertEquals("Mozilla Foundation", uai.getUaCompany());
@@ -40,7 +40,7 @@ public class TestParsers {
     public void runOnlineUAParser() throws IOException {
         UASparser p = new OnlineUpdateUASparser();
         UserAgentInfo uai = p.parse("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.12) Gecko/2009070611 Firefox/3.0.12");
-        assertEquals("Browser", uai.getTyp());
+        assertEquals("Browser", uai.getType());
         assertEquals("Firefox 3.0.12", uai.getUaName());
         assertEquals("Firefox", uai.getUaFamily());
         assertEquals("Mozilla Foundation", uai.getUaCompany());
@@ -53,7 +53,7 @@ public class TestParsers {
     public void runCachedOnlineUAParser() throws IOException {
         UASparser p = new CachingOnlineUpdateUASparser();
         UserAgentInfo uai = p.parse("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.12) Gecko/2009070611 Firefox/3.0.12");
-        assertEquals("Browser", uai.getTyp());
+        assertEquals("Browser", uai.getType());
         assertEquals("Firefox 3.0.12", uai.getUaName());
         assertEquals("Firefox", uai.getUaFamily());
         assertEquals("Mozilla Foundation", uai.getUaCompany());

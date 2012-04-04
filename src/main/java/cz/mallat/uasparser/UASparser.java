@@ -24,6 +24,7 @@ import cz.mallat.uasparser.fileparser.Section;
 public class UASparser {
 
     static final String INFO_URL = "http://user-agent-string.info";
+    static final String ROBOT = "Robot";
 
     protected Map<String, RobotEntry> robotsMap;
     protected Map<Long, OsEntry> osMap;
@@ -137,6 +138,7 @@ public class UASparser {
      */
     protected void preCompileBrowserRegMap() {
         compiledBrowserRegMap = new LinkedHashMap<Pattern, Long>(browserRegMap.size());
+
         for (Map.Entry<String, Long> entry : browserRegMap.entrySet()) {
             Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
             compiledBrowserRegMap.put(pattern, entry.getValue());
@@ -160,16 +162,11 @@ public class UASparser {
      * @param useragent
      * @param retObj
      */
-    private void processOsRegex(String useragent, UserAgentInfo retObj) {
+    protected void processOsRegex(String useragent, UserAgentInfo retObj) {
         for (Map.Entry<Pattern, Long> entry : compiledOsRegMap.entrySet()) {
             Matcher matcher = entry.getKey().matcher(useragent);
             if (matcher.find()) {
-                // simply copy the OS data into the result object
-                Long idOs = entry.getValue();
-                OsEntry os = osMap.get(idOs);
-                if (os != null) {
-                    os.copyTo(retObj);
-                }
+                retObj.setOsEntry(osMap.get(entry.getValue()));
                 break;
             }
         }
@@ -182,7 +179,7 @@ public class UASparser {
      * @param retObj
      * @return
      */
-    private boolean processBrowserRegex(String useragent, UserAgentInfo retObj) {
+    protected boolean processBrowserRegex(String useragent, UserAgentInfo retObj) {
         boolean osFound = false;
         for (Map.Entry<Pattern, Long> entry : compiledBrowserRegMap.entrySet()) {
             Matcher matcher = entry.getKey().matcher(useragent);
@@ -190,45 +187,22 @@ public class UASparser {
                 Long idBrowser = entry.getValue();
                 BrowserEntry be = browserMap.get(idBrowser);
                 if (be != null) {
-                    copyType(retObj, be);
-                    String browserVersionInfo = null;
+                    retObj.setType(browserTypeMap.get(be.getType()));;
                     if (matcher.groupCount() > 0) {
-                        browserVersionInfo = matcher.group(1);
+                        retObj.setBrowserVersionInfo(matcher.group(1));
                     }
-                    // copy the browser data into the result
-                    be.copyTo(retObj, browserVersionInfo);
+                    retObj.setBrowserEntry(be);
                 }
                 // check if this browser has exactly one OS mapped
                 Long idOs = browserOsMap.get(idBrowser);
                 if (idOs != null) {
                     osFound = true;
-                    OsEntry os = osMap.get(idOs);
-                    if (os != null) {
-                        os.copyTo(retObj);
-                    }
+                    retObj.setOsEntry(osMap.get(idOs));
                 }
                 break;
             }
         }
         return osFound;
-    }
-
-    /**
-     * Sets the source type, if possible
-     *
-     * @param retObj
-     * @param be
-     */
-    private void copyType(UserAgentInfo retObj, BrowserEntry be) {
-        Long type = be.getType();
-        if (type == null) {
-            return;
-        }
-        String typeString = browserTypeMap.get(type);
-        if (typeString == null) {
-            return;
-        }
-        retObj.setTyp(typeString);
     }
 
     /**
@@ -238,17 +212,14 @@ public class UASparser {
      * @param retObj
      * @return true if the useragent belongs to a robot, else false
      */
-    private boolean processRobot(String useragent, UserAgentInfo retObj) {
+    protected boolean processRobot(String useragent, UserAgentInfo retObj) {
         String lcUserAgent = useragent.toLowerCase();
         if (robotsMap.containsKey(lcUserAgent)) {
-            retObj.setTyp("Robot");
+            retObj.setType(ROBOT);
             RobotEntry robotEntry = robotsMap.get(lcUserAgent);
-            robotEntry.copyTo(retObj);
+            retObj.setRobotEntry(robotEntry);
             if (robotEntry.getOsId() != null) {
-                OsEntry os = osMap.get(robotEntry.getOsId());
-                if (os != null) {
-                    os.copyTo(retObj);
-                }
+                retObj.setOsEntry(osMap.get(robotEntry.getOsId()));
             }
             return true;
         }
@@ -342,7 +313,7 @@ public class UASparser {
      * @param regex
      * @return
      */
-    private String convertPerlToJavaRegex(String regex) {
+    protected String convertPerlToJavaRegex(String regex) {
         regex = regex.substring(1);
         int lastIndex = regex.lastIndexOf('/');
         regex = regex.substring(0, lastIndex);

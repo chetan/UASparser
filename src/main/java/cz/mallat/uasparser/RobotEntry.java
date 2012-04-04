@@ -106,21 +106,4 @@ class RobotEntry {
 		this.infoUrl = infoUrl;
 	}
 
-	public void copyTo(UserAgentInfo uai) {
-		if (Utils.validString(getFamily()))
-			uai.setUaFamily(getFamily());
-		if (Utils.validString(getName()))
-			uai.setUaName(getName());
-		if (Utils.validString(getUrl()))
-			uai.setUaUrl(getUrl());
-		if (Utils.validString(getCompany()))
-			uai.setUaCompany(getCompany());
-		if (Utils.validString(getCompanyUrl()))
-			uai.setUaCompanyUrl(getCompanyUrl());
-		if (Utils.validString(getIco()))
-			uai.setUaIcon(getIco());
-		if (Utils.validString(getInfoUrl()))
-			uai.setUaInfoUrl(UASparser.INFO_URL + getInfoUrl());
-	}
-
 }

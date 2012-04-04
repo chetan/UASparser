@@ -96,22 +96,4 @@ class BrowserEntry {
 		this.infoUrl = infoUrl;
 	}
 
-	public void copyTo(UserAgentInfo uai, String browserVersionInfo) {
-		if (Utils.validString(getFamily())) {
-			uai.setUaFamily(getFamily());
-			uai.setUaName(uai.getUaFamily()
-							+ (browserVersionInfo != null && !browserVersionInfo.isEmpty() ? " " + browserVersionInfo : ""));
-		}
-		if (Utils.validString(getUrl()))
-			uai.setUaUrl(getUrl());
-		if (Utils.validString(getCompany()))
-			uai.setUaCompany(getCompany());
-		if (Utils.validString(getCompanyUrl()))
-			uai.setUaCompanyUrl(getCompanyUrl());
-		if (Utils.validString(getIco()))
-			uai.setUaIcon(getIco());
-		if (Utils.validString(getInfoUrl()))
-			uai.setUaInfoUrl(UASparser.INFO_URL + getInfoUrl());
-	}
-
 }

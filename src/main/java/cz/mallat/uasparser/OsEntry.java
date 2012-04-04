@@ -76,19 +76,4 @@ class OsEntry {
 		this.ico = ico;
 	}
 
-	public void copyTo(UserAgentInfo uai) {
-		if (Utils.validString(getFamily()))
-			uai.setOsFamily(getFamily());
-		if (Utils.validString(getName()))
-			uai.setOsName(getName());
-		if (Utils.validString(getUrl()))
-			uai.setOsUrl(getUrl());
-		if (Utils.validString(getCompany()))
-			uai.setOsCompany(getCompany());
-		if (Utils.validString(getFamily()))
-			uai.setOsCompanyUrl(getFamily());
-		if (Utils.validString(getIco()))
-			uai.setOsIcon(getIco());
-	}
-
 }
