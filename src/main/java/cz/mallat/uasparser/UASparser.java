@@ -138,7 +138,6 @@ public class UASparser {
      */
     protected void preCompileBrowserRegMap() {
         compiledBrowserRegMap = new LinkedHashMap<Pattern, Long>(browserRegMap.size());
-
         for (Map.Entry<String, Long> entry : browserRegMap.entrySet()) {
             Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
             compiledBrowserRegMap.put(pattern, entry.getValue());

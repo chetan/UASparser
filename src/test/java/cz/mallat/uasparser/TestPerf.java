@@ -17,7 +17,8 @@ public class TestPerf {
 
         String test = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.12) Gecko/2009070611 Firefox/3.0.12";
 
-        UASparser p = new UASparser(getClass().getClassLoader().getResourceAsStream("uas.ini"));
+        //UASparser p = new UASparser(getClass().getClassLoader().getResourceAsStream("uas.ini"));
+        SingleThreadedUASparser p = new SingleThreadedUASparser(getClass().getClassLoader().getResourceAsStream("uas.ini"));
 
         for (int i = 0; i < 10000; i++) {
             UserAgentInfo uai = p.parse(test);
