@@ -1,5 +1,6 @@
 
 repositories.remote << 'http://www.ibiblio.org/maven2'
+repositories.remote << "http://mirrors.ibiblio.org/pub/mirrors/maven2"
 
 class Buildr::Artifact
   def <=>(other)
@@ -11,7 +12,7 @@ def add_artifacts(*args)
   artifacts( [ args ].flatten.sort.uniq ).sort
 end
 
-JARS = add_artifacts('jregex:jregex:jar:1.2_01')
+JARS = add_artifacts('net.sourceforge.jregex:jregex:jar:1.2_01')
 TEST_JARS = JARS + add_artifacts('commons-lang:commons-lang:jar:2.5')
 
 desc 'UASparser'
