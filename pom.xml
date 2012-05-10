@@ -7,8 +7,34 @@
 	<groupId>cz.mallat.uaparser</groupId>
 	<artifactId>uasparser</artifactId>
 	<version>0.3</version>
-	<name>UASparser</name>
 	<packaging>jar</packaging>
+	<name>UASparser</name>
+	<description>User Agent parser library for use with the database provided by http://user-agent-string.info/</description>
+	<url>https://github.com/chetan/UASparser</url>
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License, v3</name>
+			<url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<url>https://github.com/chetan/UASparser</url>
+		<connection>scm:git:git@github.com:chetan/UASparser.git</connection>
+		<developerConnection>scm:git:git@github.com:chetan/UASparser.git</developerConnection>
+	</scm>
+	<developers>
+		<developer>
+			<id>chetan</id>
+			<name>Chetan Sarva</name>
+			<email>csarva@pixelcop.net</email>
+			<url>http://chetanislazy.com/blog/</url>
+		</developer>
+		<developer>
+			<id>oli</id>
+			<name>Oli Kurt</name>
+		</developer>
+	</developers>
 	<build>
 		<finalName>UASparser</finalName>
 		<plugins>
