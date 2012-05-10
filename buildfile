@@ -17,9 +17,10 @@ TEST_JARS = JARS + add_artifacts('commons-lang:commons-lang:jar:2.5')
 
 desc 'UASparser'
 define 'UASparser' do
-  project.group = 'cz.mallat.uaparser'
+  project.group = 'cz.mallat.uasparser'
   project.version = '0.3'
   compile.with JARS
   test.with TEST_JARS
   package :jar, :id => 'uasparser'
+  package :sources, :id => 'uasparser'
 end
