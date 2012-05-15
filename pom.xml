@@ -12,7 +12,7 @@
 		
 	<groupId>cz.mallat.uaparser</groupId>
 	<artifactId>uasparser</artifactId>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<packaging>jar</packaging>
 	<name>UASparser</name>
 	<description>User Agent parser library for use with the database provided by http://user-agent-string.info/</description>
