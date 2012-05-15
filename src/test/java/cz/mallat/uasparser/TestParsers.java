@@ -75,4 +75,14 @@ public class TestParsers {
         UserAgentInfo uai = p.parse("Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; MyIE2; MRA 4.7 (build 01670); .NET CLR 1.1.4322)");
     }
 
+    @Test
+    public void testRobotParser() throws IOException {
+        UserAgentInfo uai = p.parse("Mozilla/5.0 (compatible; 008/0.83; http://www.80legs.com/spider.html;) Gecko/2008032620");
+        assertTrue(uai.isRobot());
+        assertEquals("Computational Crawling, LP", uai.getUaCompany());
+
+        uai = p.parse("Googlebot/2.1 (+http://www.googlebot.com/bot.html)");
+        assertFalse(uai.isRobot()); // not currently detected
+    }
+
 }

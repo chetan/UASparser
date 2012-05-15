@@ -212,10 +212,9 @@ public class UASparser {
      * @return true if the useragent belongs to a robot, else false
      */
     protected boolean processRobot(String useragent, UserAgentInfo retObj) {
-        String lcUserAgent = useragent.toLowerCase();
-        if (robotsMap.containsKey(lcUserAgent)) {
+        if (robotsMap.containsKey(useragent)) {
             retObj.setType(ROBOT);
-            RobotEntry robotEntry = robotsMap.get(lcUserAgent);
+            RobotEntry robotEntry = robotsMap.get(useragent);
             retObj.setRobotEntry(robotEntry);
             if (robotEntry.getOsId() != null) {
                 retObj.setOsEntry(osMap.get(robotEntry.getOsId()));
