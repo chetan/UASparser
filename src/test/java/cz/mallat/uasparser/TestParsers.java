@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -14,9 +15,15 @@ import org.junit.Test;
  */
 public class TestParsers {
 
+    UASparser p;
+
+    @Before
+    public void setup() throws IOException {
+        p = new UASparser(getClass().getClassLoader().getResourceAsStream("uas.ini"));
+    }
+
     @Test
     public void runUAParser() throws IOException {
-        UASparser p = new UASparser(getClass().getClassLoader().getResourceAsStream("uas.ini"));
         UserAgentInfo uai = p.parse("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.12) Gecko/2009070611 Firefox/3.0.12");
 
         // type:Browser
@@ -60,6 +67,12 @@ public class TestParsers {
         assertEquals("Windows XP", uai.getOsName());
         assertEquals("Windows", uai.getOsFamily());
         assertEquals("Microsoft Corporation.", uai.getOsCompany());
+    }
+
+    @Test
+    public void testArrayIndexBug() throws IOException {
+        // should not throw exception
+        UserAgentInfo uai = p.parse("Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; MyIE2; MRA 4.7 (build 01670); .NET CLR 1.1.4322)");
     }
 
 }

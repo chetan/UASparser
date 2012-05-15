@@ -187,7 +187,7 @@ public class UASparser {
                 BrowserEntry be = browserMap.get(idBrowser);
                 if (be != null) {
                     retObj.setType(browserTypeMap.get(be.getType()));;
-                    if (matcher.groupCount() > 0) {
+                    if (matcher.groupCount() > 1) {
                         retObj.setBrowserVersionInfo(matcher.group(1));
                     }
                     retObj.setBrowserEntry(be);
