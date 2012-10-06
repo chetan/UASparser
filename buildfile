@@ -19,8 +19,21 @@ desc 'UASparser'
 define 'UASparser' do
   project.group = 'cz.mallat.uasparser'
   project.version = '0.3.1'
+
   compile.with JARS
   test.with TEST_JARS
+
   package :jar, :id => 'uasparser'
   package :sources, :id => 'uasparser'
+
+  package(:tgz).path("#{id}-#{version}").tap do |path|
+    path.include "pom.xml"
+    path.include "README.md"
+    path.include "LICENSE"
+    path.include "COPYING"
+    path.include "COPYING.LESSER"
+    path.include package(:jar), package(:sources)
+    path.path("lib").include JARS
+  end
+
 end
