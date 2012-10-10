@@ -12,9 +12,10 @@ public class TestOnlineUpdater {
 
         UASparser parser = new UASparser();
         assertNull(parser.browserMap);
+
         OnlineUpdater updater = new OnlineUpdater(parser);
         assertNotNull(parser.browserMap);
-
+        assertTrue(updater.isAlive());
     }
 
 }
