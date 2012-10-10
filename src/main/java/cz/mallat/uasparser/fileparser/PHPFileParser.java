@@ -12,9 +12,9 @@ import java.util.List;
 
 /**
  * Emulates the behavior of the php function "parse_ini_file".
- * 
+ *
  * Does NOT support all features of the php function.
- * 
+ *
  * @author oli
  */
 public class PHPFileParser {
@@ -37,7 +37,6 @@ public class PHPFileParser {
 			try {
 				reader.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}
