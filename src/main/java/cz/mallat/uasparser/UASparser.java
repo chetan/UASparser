@@ -62,15 +62,16 @@ public class UASparser {
     }
 
     /**
-     * Constructor for inherented classes
+     * Create a new {@link UASparser} without initializing maps. Expects an updater to be
+     * configured and run immediately.
      */
-    protected UASparser() {
-        // empty
+    public UASparser() {
     }
 
     /**
-     * When a class inherents from this class, it probably has to override this method
+     * When a class inherits from this class, it probably has to override this method
      */
+    @Deprecated
     protected void checkDataMaps() throws IOException {
         // empty for this base class
     }
