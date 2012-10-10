@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import jregex.Matcher;
 import jregex.Pattern;
@@ -63,7 +65,8 @@ public class SingleThreadedUASparser extends UASparser {
      */
     @Override
     protected void processOsRegex(String useragent, UserAgentInfo retObj) {
-        for (Map.Entry<Matcher, Long> entry : compiledOsMatcherMap.entrySet()) {
+        Set<Entry<Matcher, Long>> osMatcherSet = getOsMatcherSet();
+        for (Map.Entry<Matcher, Long> entry : osMatcherSet) {
             Matcher matcher = entry.getKey();
             matcher.setTarget(useragent);
             if (matcher.find()) {
@@ -82,8 +85,9 @@ public class SingleThreadedUASparser extends UASparser {
      */
     @Override
     protected boolean processBrowserRegex(String useragent, UserAgentInfo retObj) {
+        Set<Entry<Matcher, Long>> browserMatcherSet = getBrowserMatcherSet();
         boolean osFound = false;
-        for (Map.Entry<Matcher, Long> entry : compiledBrowserMatcherMap.entrySet()) {
+        for (Map.Entry<Matcher, Long> entry : browserMatcherSet) {
             Matcher matcher = entry.getKey();
             matcher.setTarget(useragent);
             if (matcher.find()) {
@@ -106,6 +110,14 @@ public class SingleThreadedUASparser extends UASparser {
             }
         }
         return osFound;
+    }
+
+    protected Set<Entry<Matcher, Long>> getOsMatcherSet() {
+        return compiledOsMatcherMap.entrySet();
+    }
+
+    protected Set<Entry<Matcher, Long>> getBrowserMatcherSet() {
+        return compiledBrowserMatcherMap.entrySet();
     }
 
 }
