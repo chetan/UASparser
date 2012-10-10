@@ -8,9 +8,10 @@ import cz.mallat.uasparser.fileparser.PHPFileParser;
 
 /**
  * The parser will download the definition file from the internet
- * 
+ *
  * @author oli
  */
+@Deprecated
 public class OnlineUpdateUASparser extends UASparser {
 
 	protected static final String DATA_RETRIVE_URL = "http://user-agent-string.info/rpc/get_data.php?key=free&format=ini";
@@ -37,7 +38,7 @@ public class OnlineUpdateUASparser extends UASparser {
 
 	/**
 	 * Loads the data file from user-agent-string.info
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	private void loadDataFromInternet() throws IOException {
@@ -53,7 +54,7 @@ public class OnlineUpdateUASparser extends UASparser {
 
 	/**
 	 * Gets the current version from user-agent-string.info
-	 * 
+	 *
 	 * @return
 	 * @throws IOException
 	 */

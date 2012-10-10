@@ -11,20 +11,21 @@ import java.util.Properties;
 
 /**
  * Adds a cache to the OnlineUpdateUAParser
- * 
+ *
  * @author oli
  */
+@Deprecated
 public class CachingOnlineUpdateUASparser extends OnlineUpdateUASparser {
 
 	private static final String CACHE_FILENAME = "userAgentString.txt";
 	private static final String PROPERTIES_FILENAME = "userAgentString.properties";
 
-	private Properties prop;
-	private String cacheDir;
+	private final Properties prop;
+	private final String cacheDir;
 
 	/**
 	 * The cache files are put into the java tmp directory
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public CachingOnlineUpdateUASparser() throws IOException {
@@ -33,7 +34,7 @@ public class CachingOnlineUpdateUASparser extends OnlineUpdateUASparser {
 
 	/**
 	 * The cache files are put into the cacheDir
-	 * 
+	 *
 	 * @param cacheDir
 	 * @throws IOException
 	 */
@@ -96,7 +97,7 @@ public class CachingOnlineUpdateUASparser extends OnlineUpdateUASparser {
 
 	/**
 	 * loads the data file from the server and saves it to the local file system
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	private void loadDataFromInternetAndSave() throws IOException {
@@ -124,7 +125,7 @@ public class CachingOnlineUpdateUASparser extends OnlineUpdateUASparser {
 
 	/**
 	 * Saves the properties file to the local filesystem
-	 * 
+	 *
 	 * @param prop
 	 * @throws FileNotFoundException
 	 * @throws IOException
