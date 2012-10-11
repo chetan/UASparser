@@ -37,12 +37,14 @@ public class SingleThreadedUASparser extends UASparser {
      */
     @Override
     protected void preCompileBrowserRegMap() {
-        compiledBrowserMatcherMap = new LinkedHashMap<Matcher, Long>(browserRegMap.size());
+        LinkedHashMap<Matcher, Long> compiledBrowserMatcherMap =
+                new LinkedHashMap<Matcher, Long>(browserRegMap.size());
 
         for (Map.Entry<String, Long> entry : browserRegMap.entrySet()) {
             Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
             compiledBrowserMatcherMap.put(pattern.matcher(), entry.getValue());
         }
+        this.compiledBrowserMatcherMap = compiledBrowserMatcherMap;
     }
 
     /**
@@ -50,11 +52,14 @@ public class SingleThreadedUASparser extends UASparser {
      */
     @Override
     protected void preCompileOsRegMap() {
-        compiledOsMatcherMap = new LinkedHashMap<Matcher, Long>(osRegMap.size());
+        LinkedHashMap<Matcher, Long> compiledOsMatcherMap =
+                new LinkedHashMap<Matcher, Long>(osRegMap.size());
+
         for (Map.Entry<String, Long> entry : osRegMap.entrySet()) {
             Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
             compiledOsMatcherMap.put(pattern.matcher(), entry.getValue());
         }
+        this.compiledOsMatcherMap = compiledOsMatcherMap;
     }
 
     /**

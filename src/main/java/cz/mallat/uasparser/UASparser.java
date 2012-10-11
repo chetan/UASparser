@@ -138,22 +138,24 @@ public class UASparser {
      * Precompile browser regexes
      */
     protected void preCompileBrowserRegMap() {
-        compiledBrowserRegMap = new LinkedHashMap<Pattern, Long>(browserRegMap.size());
+        LinkedHashMap<Pattern, Long> compiledBrowserRegMap = new LinkedHashMap<Pattern, Long>(browserRegMap.size());
         for (Map.Entry<String, Long> entry : browserRegMap.entrySet()) {
             Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
             compiledBrowserRegMap.put(pattern, entry.getValue());
         }
+        this.compiledBrowserRegMap = compiledBrowserRegMap;
     }
 
     /**
      * Precompile OS regexes
      */
     protected void preCompileOsRegMap() {
-        compiledOsRegMap = new LinkedHashMap<Pattern, Long>(osRegMap.size());
+        LinkedHashMap<Pattern, Long> compiledOsRegMap = new LinkedHashMap<Pattern, Long>(osRegMap.size());
         for (Map.Entry<String, Long> entry : osRegMap.entrySet()) {
             Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
             compiledOsRegMap.put(pattern, entry.getValue());
         }
+        this.compiledOsRegMap = compiledOsRegMap;
     }
 
     /**
