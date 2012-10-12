@@ -10,7 +10,8 @@ import cz.mallat.uasparser.fileparser.PHPFileParser;
 import cz.mallat.uasparser.fileparser.Section;
 
 /**
- * An updater which runs in a separate background thread and will update once per day
+ * An updater which runs in a separate background thread and will update once per day.
+ * If the initial update fails, it will fallback to an included copy of uas.ini.
  *
  * @author chetan
  *
@@ -44,24 +45,32 @@ public class OnlineUpdater extends Thread implements Updater {
     public OnlineUpdater(UASparser parser, long interval, TimeUnit units) {
         this.parser = parser;
         updateInterval = units.toMillis(interval);
-        update();
+        if (!update()) {
+            try {
+                parser.loadDataFromFile(getClass().getClassLoader().getResourceAsStream("uas.ini"));
+            } catch (IOException e) {
+            }
+        }
         start();
     }
 
     /**
      * Fetch latest file from the internet if update interval has passed
+     *
+     * @return boolean True if parser was updated.
      */
     @Override
-    public void update() {
+    public boolean update() {
         try {
             String versionOnServer = getVersionFromServer();
             if (currentVersion == null || versionOnServer.compareTo(currentVersion) > 0) {
                 currentVersion = versionOnServer;
                 parser.createInternalDataStructre(loadDataFromInternet());
+                return true;
             }
         } catch (IOException e) {
-            // TODO
         }
+        return false;
     }
 
     @Override
