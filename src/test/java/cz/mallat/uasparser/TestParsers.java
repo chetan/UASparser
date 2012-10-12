@@ -19,7 +19,7 @@ public class TestParsers {
 
     @Before
     public void setup() throws IOException {
-        p = new UASparser(getClass().getClassLoader().getResourceAsStream("uas.ini"));
+        p = new UASparser(OnlineUpdater.getVendoredInputStream());
     }
 
     @Test
