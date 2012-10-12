@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import cz.mallat.uasparser.fileparser.PHPFileParser;
@@ -44,7 +45,8 @@ public class OnlineUpdater extends Thread implements Updater {
      */
     public OnlineUpdater(UASparser parser, long interval, TimeUnit units) {
         this.parser = parser;
-        updateInterval = units.toMillis(interval);
+        // add up to 60sec of jitter to interval
+        updateInterval = units.toMillis(interval) + (new Random().nextInt(60) * 1000);
         if (!update()) {
             try {
                 parser.loadDataFromFile(getClass().getClassLoader().getResourceAsStream("uas.ini"));
