@@ -18,6 +18,8 @@ import cz.mallat.uasparser.fileparser.Section;
 /**
  * User agent parser.
  *
+ * Thread-safe, however also see the {@link MultithreadedUASparser} for a faster variant.
+ *
  * @author oli
  *
  */
