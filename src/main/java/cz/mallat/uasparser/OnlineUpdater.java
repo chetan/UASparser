@@ -170,7 +170,7 @@ public class OnlineUpdater extends Thread {
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     writer.write(line);
-                    writer.write(System.lineSeparator());
+                    writer.write(System.getProperty("line.separator"));
                 }
 
             } finally {
