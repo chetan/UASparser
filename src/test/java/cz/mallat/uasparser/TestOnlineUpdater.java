@@ -29,7 +29,6 @@ public class TestOnlineUpdater {
             assertTrue(updater.isAlive());
 
             TestParsers testParsers = new TestParsers();
-            testParsers.setup();
             testParsers.runUAParser();
 
             assert(new File(tmpDir, OnlineUpdater.CACHE_FILENAME).exists());
