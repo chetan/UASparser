@@ -18,7 +18,7 @@ TEST_JARS = JARS + add_artifacts('commons-lang:commons-lang:jar:2.5')
 desc 'UASparser'
 define 'UASparser' do
   project.group = 'cz.mallat.uasparser'
-  project.version = '0.3.1'
+  project.version = '0.4.0'
 
   compile.with JARS
   test.with TEST_JARS
