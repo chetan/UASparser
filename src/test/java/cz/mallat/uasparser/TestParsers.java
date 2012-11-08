@@ -84,6 +84,9 @@ public class TestParsers {
 
         uai = p.parse("Googlebot/2.1 (+http://www.googlebot.com/bot.html)");
         assertFalse(uai.isRobot()); // not currently detected
+
+        uai = p.parse("Pingdom.com_bot_version_1.4_(http://www.pingdom.com/)");
+        assertTrue(uai.isRobot());
     }
 
 }
