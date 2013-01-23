@@ -129,7 +129,7 @@ public class OnlineUpdater extends Thread {
 
                 return true;
             }
-        } catch (IOException e) {
+        } catch (Throwable t) {
         }
         return false;
     }
@@ -163,10 +163,11 @@ public class OnlineUpdater extends Thread {
 
             // Download file to temp location
             BufferedReader reader = null;
-            FileWriter writer = new FileWriter(tmpFile);
+            FileWriter writer = null;
             try {
                 URL url = new URL(DATA_RETRIVE_URL);
                 reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                writer = new FileWriter(tmpFile);
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     writer.write(line);
@@ -174,8 +175,12 @@ public class OnlineUpdater extends Thread {
                 }
 
             } finally {
-                reader.close();
-                writer.close();
+                if (reader != null) {
+                    reader.close();
+                }
+                if (writer != null) {
+                    writer.close();
+                }
             }
 
             // Try to parse it
@@ -215,7 +220,9 @@ public class OnlineUpdater extends Thread {
             reader = new BufferedReader(new InputStreamReader(url.openStream()));
             return reader.readLine();
         } finally {
-            reader.close();
+            if (reader != null) {
+                reader.close();
+            }
         }
     }
 
