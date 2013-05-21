@@ -8,9 +8,8 @@ A fast User Agent parser library
 
 ## Install
 
-You can either download the latest binaries from the Github [downloads
-page](https://github.com/chetan/UASparser/downloads) or build it
-yourself.
+Binary downloads are no longer provided. In order to install, you must first
+build the binary yourself.
 
 Building requires [Apache buildr](http://buildr.apache.org/):
 
@@ -40,6 +39,12 @@ Windows NT 5.1; )");
 ```
 
 ## Changelog
+
+#### 0.4.1 - 2013-05-21
+
+* Added UserAgentInfo#getBrowserVersionInfo() method
+
+* Documented all UserAgentInfo reader methods
 
 #### 0.4 - 2012-11-08
 
