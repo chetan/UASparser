@@ -79,7 +79,7 @@ public class OnlineUpdater extends Thread {
     }
 
     /**
-     * Initialize the parser and start update thread
+     * Initialize the parser with cached data. Falls back to vendored copy if no cache is available.
      */
     public void init() {
 
@@ -94,13 +94,10 @@ public class OnlineUpdater extends Thread {
             }
         }
 
-        // try online update
-        if (!update()) {
-            try {
-                // fallback to vendored copy
-                parser.loadDataFromFile(getVendoredInputStream());
-            } catch (IOException e) {
-            }
+        try {
+            // fall back to vendored copy so we don't block on startup
+            parser.loadDataFromFile(getVendoredInputStream());
+        } catch (IOException e) {
         }
     }
 
@@ -142,12 +139,12 @@ public class OnlineUpdater extends Thread {
     @Override
     public void run() {
         while (true) {
+            update();
             try {
                 Thread.sleep(updateInterval);
             } catch (InterruptedException e) {
                 return;
             }
-            update();
         }
     }
 
