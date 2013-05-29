@@ -40,6 +40,12 @@ Windows NT 5.1; )");
 
 ## Changelog
 
+#### 0.5.0 - 2013-05-29
+
+* Handle version API errors (issue #3)
+* Defer initial update on startup (don't block)
+* Apply jitter after every update
+
 #### 0.4.1 - 2013-05-21
 
 * Added UserAgentInfo#getBrowserVersionInfo() method
