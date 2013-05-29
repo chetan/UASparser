@@ -34,7 +34,7 @@ public class OnlineUpdater extends Thread {
     protected static final String VERSION_CHECK_URL = "http://user-agent-string.info/rpc/get_data.php?key=free&format=ini&ver=y";
 
     protected final long updateInterval;
-    protected String currentVersion;
+    protected int currentVersion;
 
     protected UASparser parser;
 
@@ -69,6 +69,7 @@ public class OnlineUpdater extends Thread {
         }
         this.cacheFile = new File(cacheDir, CACHE_FILENAME);
         this.propsFile = new File(cacheDir, PROPERTIES_FILENAME);
+        this.currentVersion = 0;
 
         // add up to 60sec of jitter to interval
         updateInterval = units.toMillis(interval) + (new Random().nextInt(60) * 1000);
@@ -86,9 +87,10 @@ public class OnlineUpdater extends Thread {
             try {
                 parser.loadDataFromFile(cacheFile);
                 this.currentVersion =
-                        new BufferedReader(new FileReader(propsFile)).readLine();
+                        Integer.parseInt(new BufferedReader(new FileReader(propsFile)).readLine());
                 return;
             } catch (Throwable t) {
+                this.currentVersion = 0;
             }
         }
 
@@ -117,14 +119,14 @@ public class OnlineUpdater extends Thread {
      */
     public boolean update() {
         try {
-            String versionOnServer = getVersionFromServer();
-            if (currentVersion == null || versionOnServer.compareTo(currentVersion) > 0) {
-                currentVersion = versionOnServer;
+            int versionOnServer = getVersionFromServer();
+            if (currentVersion == 0 || versionOnServer > currentVersion) {
                 parser.createInternalDataStructre(loadDataFromInternet());
 
-                // if reached this far then we loaded it correctly, store new ver
+                // if reached this far then we loaded it correctly, store new version #
+                currentVersion = versionOnServer;
                 FileWriter writer = new FileWriter(propsFile);
-                writer.write(currentVersion);
+                writer.write(Integer.toString(currentVersion));
                 writer.close();
 
                 return true;
@@ -210,15 +212,21 @@ public class OnlineUpdater extends Thread {
     /**
      * Gets the current version from user-agent-string.info
      *
-     * @return
+     * @return long version number (e.g., 2013012301)
      * @throws IOException
+     * @throws {@link NumberFormatException}
      */
-    protected String getVersionFromServer() throws IOException {
+    protected int getVersionFromServer() throws IOException {
         URL url = new URL(VERSION_CHECK_URL);
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            return reader.readLine();
+            String ver = reader.readLine();
+            if (ver == null || ver.isEmpty()) {
+                throw new IOException("Failed to read version number");
+            }
+            return Integer.parseInt(ver.replace("-", ""));
+
         } finally {
             if (reader != null) {
                 reader.close();
