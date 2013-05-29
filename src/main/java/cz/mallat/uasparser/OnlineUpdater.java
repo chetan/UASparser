@@ -113,7 +113,7 @@ public class OnlineUpdater extends Thread {
     }
 
     /**
-     * Fetch latest file if update interval has passed
+     * Fetch latest UA file if a newer one is available
      *
      * @return boolean True if parser was updated.
      */
@@ -152,7 +152,7 @@ public class OnlineUpdater extends Thread {
     }
 
     /**
-     * Loads the data file from user-agent-string.info
+     * Loads the data file from user-agent-string.info and caches it on disk
      * @return
      *
      * @throws IOException
