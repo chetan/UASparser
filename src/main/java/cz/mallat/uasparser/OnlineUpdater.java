@@ -71,8 +71,7 @@ public class OnlineUpdater extends Thread {
         this.propsFile = new File(cacheDir, PROPERTIES_FILENAME);
         this.currentVersion = 0;
 
-        // add up to 60sec of jitter to interval
-        updateInterval = units.toMillis(interval) + (new Random().nextInt(60) * 1000);
+        updateInterval = units.toMillis(interval);
 
         init();
         start();
@@ -141,7 +140,8 @@ public class OnlineUpdater extends Thread {
         while (true) {
             update();
             try {
-                Thread.sleep(updateInterval);
+                // add up to 300sec of jitter to interval
+                Thread.sleep(updateInterval + (new Random().nextInt(300) * 1000));
             } catch (InterruptedException e) {
                 return;
             }
