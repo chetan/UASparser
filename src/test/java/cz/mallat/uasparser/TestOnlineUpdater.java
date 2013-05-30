@@ -27,6 +27,7 @@ public class TestOnlineUpdater {
             OnlineUpdater updater = new OnlineUpdater(parser, tmpDir.toString(), 1, TimeUnit.DAYS);
             assertNotNull(parser.browserMap);
             assertTrue(updater.isAlive());
+            updater.update(); // force immediate update
 
             TestParsers testParsers = new TestParsers();
             testParsers.runUAParser();
