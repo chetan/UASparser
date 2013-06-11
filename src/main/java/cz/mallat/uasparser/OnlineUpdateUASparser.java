@@ -3,6 +3,7 @@ package cz.mallat.uasparser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.ConnectException;
 
 import cz.mallat.uasparser.fileparser.PHPFileParser;
 
@@ -60,7 +61,12 @@ public class OnlineUpdateUASparser extends UASparser {
 	 */
 	protected String getVersionFromServer() throws IOException {
 		URL url = new URL(VERSION_CHECK_URL);
-		InputStream is = url.openStream();
+		try{
+			InputStream is = url.openStream();
+		} catch (ConnectException e) {
+                	return '0';
+		}
+		
 		try {
 			byte[] buff = new byte[4048];
 			int len = is.read(buff);
