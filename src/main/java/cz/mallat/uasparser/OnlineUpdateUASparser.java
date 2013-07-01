@@ -65,7 +65,7 @@ public class OnlineUpdateUASparser extends UASparser {
 		try{
 			is = url.openStream();
 		} catch (ConnectException e) {
-                	return "0"; //not sure about this
+                	return "0";
 		}
 		
 		try {
