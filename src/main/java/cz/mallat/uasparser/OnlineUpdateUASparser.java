@@ -61,10 +61,11 @@ public class OnlineUpdateUASparser extends UASparser {
 	 */
 	protected String getVersionFromServer() throws IOException {
 		URL url = new URL(VERSION_CHECK_URL);
+		InputStream is = null;
 		try{
-			InputStream is = url.openStream();
+			is = url.openStream();
 		} catch (ConnectException e) {
-                	return '0';
+                	return "0"; //not sure about this
 		}
 		
 		try {
