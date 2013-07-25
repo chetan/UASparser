@@ -3,6 +3,7 @@ package cz.mallat.uasparser;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -191,27 +192,15 @@ public class OnlineUpdater extends Thread {
                 List<Section> sections = fp.getSections();
 
                 // now that we've finished parsing, we can save the temp copy
-                Boolean result = tmpFile.renameTo(cacheFile);
+                if (cacheFile.exists()) {
+                    cacheFile.delete();
+                }
 
-                if (!result) {
+                if (!tmpFile.renameTo(cacheFile)) {
                     // was across filesystems or target exists, or something else.
                     // Try other another way
                     // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4017593
-                    InputStream inStream = new FileInputStream(tmpFile);
-                    OutputStream outStream = new FileOutputStream(cacheFile);
-
-                    byte[] buffer = new byte[4096];
-
-                    int length;
-                    while ((length = inStream.read(buffer)) > 0) {
-                        outStream.write(buffer, 0, length);
-                    }
-
-                    inStream.close();
-                    outStream.close();
-
-                    // delete the original file
-                    tmpFile.delete();
+                    copyFile(tmpFile, cacheFile);
                 }
 
                 return sections;
@@ -228,6 +217,30 @@ public class OnlineUpdater extends Thread {
                 tmpFile.delete();
             }
         }
+    }
+
+    /**
+     * Copy source file to destination
+     *
+     * @param src
+     * @param dest
+     *
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    protected void copyFile(File src, File dest) throws FileNotFoundException, IOException {
+        InputStream inStream = new FileInputStream(src);
+        OutputStream outStream = new FileOutputStream(dest);
+
+        byte[] buffer = new byte[4096];
+
+        int length;
+        while ((length = inStream.read(buffer)) > 0) {
+            outStream.write(buffer, 0, length);
+        }
+
+        inStream.close();
+        outStream.close();
     }
 
     /**
