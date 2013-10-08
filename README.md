@@ -40,6 +40,10 @@ Windows NT 5.1; )");
 
 ## Changelog
 
+#### 0.6.0 - 2013-10-08
+
+* added support for the [device] and [device_reg] sections
+
 #### 0.5.0 - 2013-05-29
 
 * Handle version API errors (issue #3)
