@@ -14,7 +14,7 @@ package cz.mallat.uasparser;
  */
 public class UserAgentInfo {
 
-    private static final String UNKNOWN = "unknown";
+    public static final String UNKNOWN = "unknown";
 
 	private String type;
     private String browserVersionInfo;
