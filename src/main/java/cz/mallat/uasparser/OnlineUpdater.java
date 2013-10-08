@@ -121,7 +121,7 @@ public class OnlineUpdater extends Thread {
         try {
             int versionOnServer = getVersionFromServer();
             if (currentVersion == 0 || versionOnServer > currentVersion) {
-                parser.createInternalDataStructre(loadDataFromInternet());
+                parser.createInternalDataStructure(loadDataFromInternet());
 
                 // if reached this far then we loaded it correctly, store new version #
                 currentVersion = versionOnServer;

@@ -9,6 +9,7 @@ package cz.mallat.uasparser;
  * or questions about the data returned, please contact the maintainer of the database directly.
  *
  * @author oli
+ * @author Felix Siegrist, Inventage AG
  *
  */
 public class UserAgentInfo {
@@ -21,6 +22,7 @@ public class UserAgentInfo {
 	private RobotEntry robotEntry;
 	private BrowserEntry browserEntry;
 	private OsEntry osEntry;
+	private DeviceEntry deviceEntry;
 
 	public UserAgentInfo() {
         this.type = UNKNOWN;
@@ -31,7 +33,15 @@ public class UserAgentInfo {
 	 * @return
 	 */
 	public boolean isRobot() {
-	    return browserEntry == null && robotEntry != null;
+	    return UASparser.ROBOT.equals(type);
+	}
+	
+	public boolean hasOsInfo() {
+		return osEntry != null;
+	}
+	
+	public boolean hasDeviceInfo() {
+		return deviceEntry != null;
 	}
 
 	/**
@@ -61,8 +71,8 @@ public class UserAgentInfo {
 		return type;
 	}
 
-	public void setType(String typ) {
-		this.type = typ;
+	public void setType(String type) {
+		this.type = type;
 	}
 
     /**
@@ -137,7 +147,7 @@ public class UserAgentInfo {
      */
 	public String getUaInfoUrl() {
 	    if (browserEntry != null) {
-	        return browserEntry.getInfoUrl();
+	        return UASparser.INFO_URL + browserEntry.getInfoUrl();
 	    }
 	    if (robotEntry != null) {
 	        return UASparser.INFO_URL + robotEntry.getInfoUrl();
@@ -282,6 +292,51 @@ public class UserAgentInfo {
     public String getBrowserVersionInfo() {
         return browserVersionInfo;
     }
+    
+    /**
+	 * Retrieve the type of the device, if available. Can be one of the following:
+	 *
+	 * <ul>
+	 *     <li>"Personal computer"
+	 *     <li>"Smartphone"
+	 *     <li>"Tablet"
+	 *     <li>"Game console"
+	 *     <li>"Smart TV"
+	 *     <li>"Other"
+	 * </ul>
+	 *
+	 * @return {@link String} type
+	 */
+	public String getDeviceType() {
+    	return deviceEntry != null ? deviceEntry.getType() : UNKNOWN; 
+    }
+    
+    /**
+     * Retrieve the icon filename, if available; i.e., given the UA:
+     *
+     * <p>"Mozilla/5.0 (Linux; U; Android 2.3.5; de-ch; HTC_DesireHD_A9191 Build/GRJ90) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"</p>
+     *
+     * <p>it would return "phone.png"</p>
+     *
+     * @return {@link String} URL
+     * @see <a href="http://user-agent-string.info/download">http://user-agent-string.info/download</a>
+     */
+	public String getDeviceIcon() {
+    	return deviceEntry != null ? deviceEntry.getIco() : UNKNOWN; 
+    }
+    
+	/**
+     * Retrieve the URL path for the given UA on user-agent-string.info; i.e., given the UA:
+     *
+     * <p>"Mozilla/5.0 (Linux; U; Android 2.3.5; de-ch; HTC_DesireHD_A9191 Build/GRJ90) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"</p>
+     *
+     * <p>it would return "http://user-agent-string.info/list-of-ua/device-detail?device=Smartphone".</p>
+     *
+     * @return {@link String} URL path
+     */
+	public String getDeviceInfoUrl() {
+    	return deviceEntry != null ? UASparser.INFO_URL + deviceEntry.getInfoUrl() : UNKNOWN; 
+    }
 
 
 	// setters
@@ -300,6 +355,10 @@ public class UserAgentInfo {
 
     public void setRobotEntry(RobotEntry robotEntry) {
         this.robotEntry = robotEntry;
+    }
+    
+    public void setDeviceEntry(DeviceEntry deviceEntry) {
+    	this.deviceEntry = deviceEntry;
     }
 
 }

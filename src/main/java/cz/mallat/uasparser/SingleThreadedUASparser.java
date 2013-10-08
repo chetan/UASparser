@@ -86,12 +86,10 @@ public class SingleThreadedUASparser extends UASparser {
      *
      * @param useragent
      * @param retObj
-     * @return
      */
     @Override
-    protected boolean processBrowserRegex(String useragent, UserAgentInfo retObj) {
+    protected void processBrowserRegex(String useragent, UserAgentInfo retObj) {
         Set<Entry<Matcher, Long>> browserMatcherSet = getBrowserMatcherSet();
-        boolean osFound = false;
         for (Map.Entry<Matcher, Long> entry : browserMatcherSet) {
             Matcher matcher = entry.getKey();
             matcher.setTarget(useragent);
@@ -108,13 +106,11 @@ public class SingleThreadedUASparser extends UASparser {
                 // check if this browser has exactly one OS mapped
                 Long idOs = browserOsMap.get(idBrowser);
                 if (idOs != null) {
-                    osFound = true;
                     retObj.setOsEntry(osMap.get(idOs));
                 }
-                break;
+                return;
             }
         }
-        return osFound;
     }
 
     protected Set<Entry<Matcher, Long>> getOsMatcherSet() {
