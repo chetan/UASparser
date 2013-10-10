@@ -23,6 +23,7 @@ public class SingleThreadedUASparser extends UASparser {
 
     protected Map<Matcher, Long> compiledBrowserMatcherMap;
     protected Map<Matcher, Long> compiledOsMatcherMap;
+    protected Map<Matcher, Long> compiledDeviceMatcherMap;
 
     public SingleThreadedUASparser(InputStream inputStreamToDefinitionFile) throws IOException {
         super(inputStreamToDefinitionFile);
@@ -60,6 +61,24 @@ public class SingleThreadedUASparser extends UASparser {
             compiledOsMatcherMap.put(pattern.matcher(), entry.getValue());
         }
         this.compiledOsMatcherMap = compiledOsMatcherMap;
+    }
+
+    /**
+     * Precompile device regexes
+     */
+    @Override
+    protected void preCompileDeviceRegMap() {
+        if (deviceRegMap == null) {
+            return; // skip for older ini files
+        }
+        LinkedHashMap<Matcher, Long> compiledDeviceMatcherMap =
+                new LinkedHashMap<Matcher, Long>(deviceRegMap.size());
+
+        for (Map.Entry<String, Long> entry : deviceRegMap.entrySet()) {
+            Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
+            compiledDeviceMatcherMap.put(pattern.matcher(), entry.getValue());
+        }
+        this.compiledDeviceMatcherMap = compiledDeviceMatcherMap;
     }
 
     /**
@@ -108,6 +127,27 @@ public class SingleThreadedUASparser extends UASparser {
                 if (idOs != null) {
                     retObj.setOsEntry(osMap.get(idOs));
                 }
+                return;
+            }
+        }
+    }
+
+    /**
+     * Searches in the devices regex table. if found a match copies the device data
+     *
+     * @param useragent
+     * @param uaInfo
+     */
+    @Override
+    protected void processDeviceRegex(String useragent, UserAgentInfo uaInfo) {
+        if (compiledDeviceMatcherMap == null || deviceMap == null) {
+            return;
+        }
+        for (Map.Entry<Matcher, Long> entry : compiledDeviceMatcherMap.entrySet()) {
+            Matcher matcher = entry.getKey();
+            matcher.setTarget(useragent);
+            if (matcher.find()) {
+                uaInfo.setDeviceEntry(deviceMap.get(entry.getValue()));
                 return;
             }
         }
