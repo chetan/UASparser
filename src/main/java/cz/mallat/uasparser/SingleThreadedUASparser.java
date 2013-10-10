@@ -140,10 +140,11 @@ public class SingleThreadedUASparser extends UASparser {
      */
     @Override
     protected void processDeviceRegex(String useragent, UserAgentInfo uaInfo) {
-        if (compiledDeviceMatcherMap == null || deviceMap == null) {
+        Set<Entry<Matcher, Long>> deviceMatcherSet = getDeviceMatcherSet();
+        if (deviceMatcherSet == null || deviceMap == null) {
             return;
         }
-        for (Map.Entry<Matcher, Long> entry : compiledDeviceMatcherMap.entrySet()) {
+        for (Map.Entry<Matcher, Long> entry : deviceMatcherSet) {
             Matcher matcher = entry.getKey();
             matcher.setTarget(useragent);
             if (matcher.find()) {
@@ -159,6 +160,10 @@ public class SingleThreadedUASparser extends UASparser {
 
     protected Set<Entry<Matcher, Long>> getBrowserMatcherSet() {
         return compiledBrowserMatcherMap.entrySet();
+    }
+
+    protected Set<Entry<Matcher, Long>> getDeviceMatcherSet() {
+        return compiledDeviceMatcherMap.entrySet();
     }
 
 }

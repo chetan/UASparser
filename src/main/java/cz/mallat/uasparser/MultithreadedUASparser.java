@@ -25,6 +25,8 @@ public class MultithreadedUASparser extends SingleThreadedUASparser {
 
     private ThreadLocal<Map<Matcher, Long>> compiledOsMatcherMapT;
 
+    private ThreadLocal<Map<Matcher, Long>> compiledDeviceMatcherMapT;
+
     public MultithreadedUASparser(InputStream inputStreamToDefinitionFile) throws IOException {
         super(inputStreamToDefinitionFile);
     }
@@ -65,6 +67,26 @@ public class MultithreadedUASparser extends SingleThreadedUASparser {
     }
 
     @Override
+    protected void preCompileDeviceRegMap() {
+        compiledDeviceMatcherMapT = new ThreadLocal<Map<Matcher,Long>>() {
+            @Override
+            protected Map<Matcher, Long> initialValue() {
+                if (deviceRegMap == null) {
+                    return null; // skip for older ini files
+                }
+                LinkedHashMap<Matcher, Long> compiledDeviceMatcherMap =
+                        new LinkedHashMap<Matcher, Long>(deviceRegMap.size());
+
+                for (Map.Entry<String, Long> entry : deviceRegMap.entrySet()) {
+                    Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
+                    compiledDeviceMatcherMap.put(pattern.matcher(), entry.getValue());
+                }
+                return compiledDeviceMatcherMap;
+            }
+        };
+    }
+
+    @Override
     protected Set<Entry<Matcher, Long>> getOsMatcherSet() {
         return compiledOsMatcherMapT.get().entrySet();
     }
@@ -72,6 +94,11 @@ public class MultithreadedUASparser extends SingleThreadedUASparser {
     @Override
     protected Set<Entry<Matcher, Long>> getBrowserMatcherSet() {
         return compiledBrowserMatcherMapT.get().entrySet();
+    }
+
+    @Override
+    protected Set<Entry<Matcher, Long>> getDeviceMatcherSet() {
+        return compiledDeviceMatcherMapT.get().entrySet();
     }
 
 }
