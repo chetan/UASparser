@@ -9,7 +9,7 @@
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
 	</parent>
-		
+
 	<groupId>cz.mallat.uaparser</groupId>
 	<artifactId>uasparser</artifactId>
 	<version>0.5.0</version>
@@ -39,6 +39,12 @@
 		<developer>
 			<id>oli</id>
 			<name>Oli Kurt</name>
+		</developer>
+		<developer>
+			<id>fsiegrist</id>
+			<name>Felix Siegrist</name>
+			<email>felix.siegrist@inventage.com</email>
+			<url>http://www.inventage.com</url>
 		</developer>
 	</developers>
 	<build>
