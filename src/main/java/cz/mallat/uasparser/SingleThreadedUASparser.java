@@ -38,6 +38,10 @@ public class SingleThreadedUASparser extends UASparser {
      */
     @Override
     protected void preCompileBrowserRegMap() {
+        this.compiledBrowserMatcherMap = preCompileBrowserMatcherMap();
+    }
+
+    protected LinkedHashMap<Matcher, Long> preCompileBrowserMatcherMap() {
         LinkedHashMap<Matcher, Long> compiledBrowserMatcherMap =
                 new LinkedHashMap<Matcher, Long>(browserRegMap.size());
 
@@ -45,7 +49,7 @@ public class SingleThreadedUASparser extends UASparser {
             Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
             compiledBrowserMatcherMap.put(pattern.matcher(), entry.getValue());
         }
-        this.compiledBrowserMatcherMap = compiledBrowserMatcherMap;
+        return compiledBrowserMatcherMap;
     }
 
     /**
@@ -53,6 +57,10 @@ public class SingleThreadedUASparser extends UASparser {
      */
     @Override
     protected void preCompileOsRegMap() {
+        this.compiledOsMatcherMap = preCompileOsMatcherMap();
+    }
+
+    protected LinkedHashMap<Matcher, Long> preCompileOsMatcherMap() {
         LinkedHashMap<Matcher, Long> compiledOsMatcherMap =
                 new LinkedHashMap<Matcher, Long>(osRegMap.size());
 
@@ -60,7 +68,7 @@ public class SingleThreadedUASparser extends UASparser {
             Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
             compiledOsMatcherMap.put(pattern.matcher(), entry.getValue());
         }
-        this.compiledOsMatcherMap = compiledOsMatcherMap;
+        return compiledOsMatcherMap;
     }
 
     /**
@@ -68,8 +76,12 @@ public class SingleThreadedUASparser extends UASparser {
      */
     @Override
     protected void preCompileDeviceRegMap() {
+        this.compiledDeviceMatcherMap = preCompileDeviceMatcherMap();
+    }
+
+    protected LinkedHashMap<Matcher, Long> preCompileDeviceMatcherMap() {
         if (deviceRegMap == null) {
-            return; // skip for older ini files
+            return null; // skip for older ini files
         }
         LinkedHashMap<Matcher, Long> compiledDeviceMatcherMap =
                 new LinkedHashMap<Matcher, Long>(deviceRegMap.size());
@@ -78,7 +90,7 @@ public class SingleThreadedUASparser extends UASparser {
             Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
             compiledDeviceMatcherMap.put(pattern.matcher(), entry.getValue());
         }
-        this.compiledDeviceMatcherMap = compiledDeviceMatcherMap;
+        return compiledDeviceMatcherMap;
     }
 
     /**
