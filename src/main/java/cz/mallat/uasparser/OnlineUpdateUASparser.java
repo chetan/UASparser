@@ -47,7 +47,7 @@ public class OnlineUpdateUASparser extends UASparser {
 		InputStream is = url.openStream();
 		try {
 			PHPFileParser fp = new PHPFileParser(is);
-			createInternalDataStructre(fp.getSections());
+			createInternalDataStructure(fp.getSections());
 		} finally {
 			is.close();
 		}

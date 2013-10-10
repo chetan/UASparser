@@ -35,11 +35,21 @@ public class UASparser {
     protected Map<String, Long> browserRegMap;
     protected Map<Long, Long> browserOsMap;
     protected Map<String, Long> osRegMap;
+    protected Map<Long, DeviceEntry> deviceMap;
+    protected Map<String, Long> deviceRegMap;
 
     protected Map<Pattern, Long> compiledBrowserRegMap;
     protected Map<Pattern, Long> compiledOsRegMap;
+    protected Map<Pattern, Long> compiledDeviceRegMap;
 
     protected UserAgentInfo unknownAgentInfo;
+
+    /**
+     * Create a new {@link UASparser} without initializing maps. Expects an updater to be
+     * configured and run immediately.
+     */
+    public UASparser() {
+    }
 
     /**
      * Use the given filename to load the definition file from the local filesystem
@@ -64,13 +74,6 @@ public class UASparser {
     }
 
     /**
-     * Create a new {@link UASparser} without initializing maps. Expects an updater to be
-     * configured and run immediately.
-     */
-    public UASparser() {
-    }
-
-    /**
      * When a class inherits from this class, it probably has to override this method
      */
     @Deprecated
@@ -87,27 +90,29 @@ public class UASparser {
      * @return
      */
     public UserAgentInfo parse(String useragent) throws IOException {
-        UserAgentInfo retObj = new UserAgentInfo();
-
         if (useragent == null) {
-            return retObj;
+            return unknownAgentInfo;
         }
+        
+        UserAgentInfo uaInfo = new UserAgentInfo();
         useragent = useragent.trim();
 
         // check that the data maps are up-to-date
         checkDataMaps();
 
         // first check if it's a robot
-        if (!processRobot(useragent, retObj)) {
-            // search for a browser on the browser regex patterns
-            boolean osFound = processBrowserRegex(useragent, retObj);
-
-            if (!osFound) {
+        processRobot(useragent, uaInfo);
+        if (!uaInfo.isRobot()) {
+            // it's not a robot, so search for a browser on the browser regex patterns
+            processBrowserRegex(useragent, uaInfo);
+            if (!uaInfo.hasOsInfo()) {
                 // search the OS regex patterns for the used OS
-                processOsRegex(useragent, retObj);
+                processOsRegex(useragent, uaInfo);
             }
+            // search the device regex patterns to set the according device
+            processDeviceRegex(useragent, uaInfo);
         }
-        return retObj;
+        return uaInfo;
     }
 
     /**
@@ -118,14 +123,13 @@ public class UASparser {
      * @return {@link UserAgentInfo}
      */
     public UserAgentInfo parseBrowserOnly(String useragent) {
-
         if (useragent == null) {
             return unknownAgentInfo;
         }
 
-        UserAgentInfo retObj = new UserAgentInfo();
-        processBrowserRegex(useragent, retObj);
-        return retObj;
+        UserAgentInfo uaInfo = new UserAgentInfo();
+        processBrowserRegex(useragent, uaInfo);
+        return uaInfo;
     }
 
     /**
@@ -134,6 +138,7 @@ public class UASparser {
     protected void preCompileRegExes() {
         preCompileBrowserRegMap();
         preCompileOsRegMap();
+        preCompileDeviceRegMap();
     }
 
     /**
@@ -161,17 +166,32 @@ public class UASparser {
     }
 
     /**
-     * Searches in the os regex table. if found a match copies the os data
+     * Precompile device regexes
+     */
+    protected void preCompileDeviceRegMap() {
+        if (deviceRegMap != null) {
+	    	LinkedHashMap<Pattern, Long> compiledDeviceRegMap = new LinkedHashMap<Pattern, Long>(deviceRegMap.size());
+	        for (Map.Entry<String, Long> entry : deviceRegMap.entrySet()) {
+	            Pattern pattern = new Pattern(entry.getKey(), Pattern.IGNORE_CASE | Pattern.DOTALL);
+	            compiledDeviceRegMap.put(pattern, entry.getValue());
+	        }
+	        this.compiledDeviceRegMap = compiledDeviceRegMap;
+        }
+    }
+
+    /**
+     * Checks if the useragent comes from a robot. if yes copies all the data to the result object
      *
      * @param useragent
-     * @param retObj
+     * @param uaInfo
      */
-    protected void processOsRegex(String useragent, UserAgentInfo retObj) {
-        for (Map.Entry<Pattern, Long> entry : compiledOsRegMap.entrySet()) {
-            Matcher matcher = entry.getKey().matcher(useragent);
-            if (matcher.find()) {
-                retObj.setOsEntry(osMap.get(entry.getValue()));
-                break;
+    protected void processRobot(String useragent, UserAgentInfo uaInfo) {
+        if (robotsMap.containsKey(useragent)) {
+            uaInfo.setType(ROBOT);
+            RobotEntry robotEntry = robotsMap.get(useragent);
+            uaInfo.setRobotEntry(robotEntry);
+            if (robotEntry.getOsId() != null) {
+                uaInfo.setOsEntry(osMap.get(robotEntry.getOsId()));
             }
         }
     }
@@ -180,64 +200,74 @@ public class UASparser {
      * Searchs in the browser regex table. if found a match copies the browser data and if possible os data
      *
      * @param useragent
-     * @param retObj
-     * @return
+     * @param uaInfo
      */
-    protected boolean processBrowserRegex(String useragent, UserAgentInfo retObj) {
-        boolean osFound = false;
+    protected void processBrowserRegex(String useragent, UserAgentInfo uaInfo) {
         for (Map.Entry<Pattern, Long> entry : compiledBrowserRegMap.entrySet()) {
             Matcher matcher = entry.getKey().matcher(useragent);
             if (matcher.find()) {
                 Long idBrowser = entry.getValue();
                 BrowserEntry be = browserMap.get(idBrowser);
                 if (be != null) {
-                    retObj.setType(browserTypeMap.get(be.getType()));;
+                    uaInfo.setType(browserTypeMap.get(be.getType()));;
                     if (matcher.groupCount() > 1) {
-                        retObj.setBrowserVersionInfo(matcher.group(1));
+                        uaInfo.setBrowserVersionInfo(matcher.group(1));
                     }
-                    retObj.setBrowserEntry(be);
+                    uaInfo.setBrowserEntry(be);
                 }
                 // check if this browser has exactly one OS mapped
                 Long idOs = browserOsMap.get(idBrowser);
                 if (idOs != null) {
-                    osFound = true;
-                    retObj.setOsEntry(osMap.get(idOs));
+                    uaInfo.setOsEntry(osMap.get(idOs));
                 }
-                break;
+                return;
             }
         }
-        return osFound;
     }
 
     /**
-     * Checks if the useragent comes from a robot. if yes copies all the data to the result object
+     * Searches in the os regex table. if found a match copies the os data
      *
      * @param useragent
-     * @param retObj
-     * @return true if the useragent belongs to a robot, else false
+     * @param uaInfo
      */
-    protected boolean processRobot(String useragent, UserAgentInfo retObj) {
-        if (robotsMap.containsKey(useragent)) {
-            retObj.setType(ROBOT);
-            RobotEntry robotEntry = robotsMap.get(useragent);
-            retObj.setRobotEntry(robotEntry);
-            if (robotEntry.getOsId() != null) {
-                retObj.setOsEntry(osMap.get(robotEntry.getOsId()));
+    protected void processOsRegex(String useragent, UserAgentInfo uaInfo) {
+        for (Map.Entry<Pattern, Long> entry : compiledOsRegMap.entrySet()) {
+            Matcher matcher = entry.getKey().matcher(useragent);
+            if (matcher.find()) {
+                uaInfo.setOsEntry(osMap.get(entry.getValue()));
+                return;
             }
-            return true;
         }
-        return false;
     }
 
     /**
-     * loads the data file and creates all internal data structs
+     * Searches in the devices regex table. if found a match copies the device data
+     *
+     * @param useragent
+     * @param uaInfo
+     */
+    protected void processDeviceRegex(String useragent, UserAgentInfo uaInfo) {
+        if (compiledDeviceRegMap != null && deviceMap != null) {
+	    	for (Map.Entry<Pattern, Long> entry : compiledDeviceRegMap.entrySet()) {
+	            Matcher matcher = entry.getKey().matcher(useragent);
+	            if (matcher.find()) {
+	                uaInfo.setDeviceEntry(deviceMap.get(entry.getValue()));
+	                return;
+	            }
+	        }
+        }
+    }
+
+    /**
+     * loads the data file and creates all internal data structures
      *
      * @param definitionFile
      * @throws IOException
      */
     protected void loadDataFromFile(File definitionFile) throws IOException {
         PHPFileParser fp = new PHPFileParser(definitionFile);
-        createInternalDataStructre(fp.getSections());
+        createInternalDataStructure(fp.getSections());
     }
 
     /**
@@ -248,15 +278,15 @@ public class UASparser {
      */
     protected void loadDataFromFile(InputStream is) throws IOException {
         PHPFileParser fp = new PHPFileParser(is);
-        createInternalDataStructre(fp.getSections());
+        createInternalDataStructure(fp.getSections());
     }
 
     /**
-     * Creates the internal data structes from the seciontList
+     * Creates the internal data structures from the sectionList
      *
      * @param sectionList
      */
-    protected void createInternalDataStructre(List<Section> sectionList) {
+    protected void createInternalDataStructure(List<Section> sectionList) {
         for (Section sec : sectionList) {
             if ("robots".equals(sec.getName())) {
                 Map<String, RobotEntry> robotsMapTmp = new HashMap<String, RobotEntry>();
@@ -305,6 +335,20 @@ public class UASparser {
                     osRegMapTmp.put(convertPerlToJavaRegex(it.next()), Long.parseLong(it.next()));
                 }
                 osRegMap = osRegMapTmp;
+            } else if ("device".equals(sec.getName())) {
+            	Map<Long, DeviceEntry> deviceMapTmp = new HashMap<Long, DeviceEntry>();
+                for (Entry en : sec.getEntries()) {
+                	DeviceEntry de = new DeviceEntry(en.getData());
+                	deviceMapTmp.put(Long.parseLong(en.getKey()), de);
+                }
+                deviceMap = deviceMapTmp;
+            } else if ("device_reg".equals(sec.getName())) {
+                Map<String, Long> deviceRegMapTmp = new LinkedHashMap<String, Long>();
+                for (Entry en : sec.getEntries()) {
+                    Iterator<String> it = en.getData().iterator();
+                    deviceRegMapTmp.put(convertPerlToJavaRegex(it.next()), Long.parseLong(it.next()));
+                }
+                deviceRegMap = deviceRegMapTmp;
             }
         }
         preCompileRegExes();
