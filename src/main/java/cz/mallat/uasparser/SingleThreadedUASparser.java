@@ -175,6 +175,9 @@ public class SingleThreadedUASparser extends UASparser {
     }
 
     protected Set<Entry<Matcher, Long>> getDeviceMatcherSet() {
+        if (compiledDeviceMatcherMap == null) {
+            return null;
+        }
         return compiledDeviceMatcherMap.entrySet();
     }
 

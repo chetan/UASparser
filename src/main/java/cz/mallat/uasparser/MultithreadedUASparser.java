@@ -73,7 +73,11 @@ public class MultithreadedUASparser extends SingleThreadedUASparser {
 
     @Override
     protected Set<Entry<Matcher, Long>> getDeviceMatcherSet() {
-        return compiledDeviceMatcherMapT.get().entrySet();
+        Map<Matcher, Long> map = compiledDeviceMatcherMapT.get();
+        if (map == null) {
+            return null;
+        }
+        return map.entrySet();
     }
 
 }
