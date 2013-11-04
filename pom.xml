@@ -1,85 +1,220 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-	xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>
+  <modelVersion>4.0.0</modelVersion>
 
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
+  <groupId>cz.mallat.uaparser</groupId>
+  <artifactId>uasparser</artifactId>
 
-	<groupId>cz.mallat.uaparser</groupId>
-	<artifactId>uasparser</artifactId>
-	<version>0.6.0</version>
-	<packaging>jar</packaging>
-	<name>UASparser</name>
-	<description>User Agent parser library for use with the database provided by http://user-agent-string.info/</description>
-	<url>https://github.com/chetan/UASparser</url>
-	<licenses>
-		<license>
-			<name>GNU Lesser General Public License, v3</name>
-			<url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-	<scm>
-		<url>https://github.com/chetan/UASparser</url>
-		<connection>scm:git:git@github.com:chetan/UASparser.git</connection>
-		<developerConnection>scm:git:git@github.com:chetan/UASparser.git</developerConnection>
-	</scm>
-	<developers>
-		<developer>
-			<id>chetan</id>
-			<name>Chetan Sarva</name>
-			<email>csarva@pixelcop.net</email>
-			<url>http://chetanislazy.com/blog/</url>
-		</developer>
-		<developer>
-			<id>oli</id>
-			<name>Oli Kurt</name>
-		</developer>
-		<developer>
-			<id>fsiegrist</id>
-			<name>Felix Siegrist</name>
-			<email>felix.siegrist@inventage.com</email>
-			<url>http://www.inventage.com</url>
-		</developer>
-	</developers>
-	<build>
-		<finalName>UASparser</finalName>
-		<plugins>
-			<!-- compile against java 6 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<dependencies>
-		<dependency>
-			<groupId>net.sourceforge.jregex</groupId>
-			<artifactId>jregex</artifactId>
-			<version>1.2_01</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.6</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-				<groupId>commons-lang</groupId>
-				<artifactId>commons-lang</artifactId>
-				<version>2.5</version>
-				<scope>test</scope>
-		</dependency>
-	</dependencies>
+  <version>0.6.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>UASparser</name>
+  <description>
+    User Agent parser library for use with the database provided by http://user-agent-string.info/
+  </description>
+  <url>https://github.com/chetan/UASparser</url>
+
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License, v3</name>
+      <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>https://github.com/chetan/UASparser</url>
+    <connection>scm:git:git://github.com/chetan/UASparser.git</connection>
+    <developerConnection>scm:git:git@github.com:chetan/UASparser.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <distributionManagement>
+    <!-- You'll probably want to test this out with a local copy of Nexus OSS. -->
+    <!-- Remove these entries and uncomment the Sonatype Nexus repositories
+      below when you actually want to release. -->
+    <snapshotRepository>
+      <id>localhost-nexus-snapshots</id>
+      <name>Local Nexus snapshot repository</name>
+      <url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
+    <repository>
+      <id>localhost-nexus-staging</id>
+      <name>Local Nexus release repository</name>
+      <url>http://localhost:8081/nexus/content/repositories/releases/</url>
+    </repository>
+<!--    <snapshotRepository> -->
+<!--      <id>sonatype-nexus-snapshots</id> -->
+<!--      <name>Sonatype Nexus snapshot repository</name> -->
+<!--      <url>https://oss.sonatype.org/content/repositories/snapshots</url> -->
+<!--    </snapshotRepository> -->
+<!--    <repository> -->
+<!--      <id>sonatype-nexus-staging</id> -->
+<!--      <name>Sonatype Nexus release repository</name> -->
+<!--      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url> -->
+<!--    </repository> -->
+  </distributionManagement>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <developers>
+    <developer>
+      <id>chetan</id>
+      <name>Chetan Sarva</name>
+      <email>csarva@pixelcop.net</email>
+      <url>http://chetanislazy.com/blog/</url>
+    </developer>
+    <developer>
+      <id>oli</id>
+      <name>Oli Kurt</name>
+    </developer>
+    <developer>
+      <id>fsiegrist</id>
+      <name>Felix Siegrist</name>
+      <email>felix.siegrist@inventage.com</email>
+      <url>http://www.inventage.com</url>
+    </developer>
+  </developers>
+
+  <build>
+
+    <!-- Include the README, LICENSE, and COPYING files: -->
+    <resources>
+      <resource>
+        <directory>${project.basedir}</directory>
+        <includes>
+          <include>README*</include>
+          <include>LICENSE*</include>
+          <include>COPYING*</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadoc</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Release configuration: -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.4.1</version>
+        <configuration>
+          <mavenExecutorId>forked-path</mavenExecutorId>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <profiles>
+
+    <!-- GPG Signature on release -->
+    <profile>
+      <id>release-sign-artifacts</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.4</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+
+  <dependencies>
+    <dependency>
+      <groupId>net.sourceforge.jregex</groupId>
+      <artifactId>jregex</artifactId>
+      <version>1.2_01</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.6</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.5</version>
+        <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>
