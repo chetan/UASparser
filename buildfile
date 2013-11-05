@@ -25,6 +25,7 @@ define 'UASparser' do
 
   package :jar, :id => 'uasparser'
   package :sources, :id => 'uasparser'
+  package :javadoc, :id => 'uasparser'
 
   package(:tgz).path("#{id}-#{version}").tap do |path|
     path.include "pom.xml"
