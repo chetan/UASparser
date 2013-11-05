@@ -1,6 +1,8 @@
+.ruby-version
 .rvmrc
 .classpath
 .project
 .settings
 target/
 reports/
+tmp/
