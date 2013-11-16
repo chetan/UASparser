@@ -2,10 +2,6 @@
 
 A fast User Agent parser library
 
-## Dependencies
-
-* [JRegex](http://jregex.sourceforge.net/)
-
 ## Install
 
 UASparser is available via Maven Central under the group ID `cz.mallat.uasparser` and artifact ID `uasparser`. 
@@ -39,6 +35,11 @@ $ buildr package
 ```
 
 Binaries will be placed in `target`.
+
+## Dependencies
+
+* [JRegex](http://jregex.sourceforge.net/)
+
 
 ## Changelog
 
