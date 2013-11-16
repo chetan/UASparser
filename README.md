@@ -4,12 +4,25 @@ A fast User Agent parser library
 
 ## Dependencies
 
-* [JRegex](http://jregex.sourceforge.net/) (included in tarball)
+* [JRegex](http://jregex.sourceforge.net/)
 
 ## Install
 
-Binary downloads are no longer provided. In order to install, you must first
-build the binary yourself.
+UASparser is available via Maven Central under the group ID `cz.mallat.uasparser` and artifact ID `uasparser`. 
+View the [latest pom.xml](http://search.maven.org/#artifactdetails%7Ccz.mallat.uasparser%7Cuasparser%7C0.6.0%7Cjar).
+
+## Usage
+
+Simply use UASparser or any of its subclasses like so:
+
+```
+UASparser parser = new UASparser("uas.ini");
+OnlineUpdater updater = new OnlineUpdater(parser);
+UserAgentInfo info = parser.parse("Mozilla/4.0 (compatible; MSIE 7.0;
+Windows NT 5.1; )");
+```
+
+## Building
 
 Building requires [Apache buildr](http://buildr.apache.org/):
 
@@ -25,20 +38,13 @@ $ cd UASparser
 $ buildr package
 ```
 
-Binaries will be placed in _target_.
-
-## Usage
-
-Simply use UASparser or any of its subclasses like so:
-
-```
-UASparser parser = new UASparser("uas.ini");
-OnlineUpdater updater = new OnlineUpdater(parser);
-UserAgentInfo info = parser.parse("Mozilla/4.0 (compatible; MSIE 7.0;
-Windows NT 5.1; )");
-```
+Binaries will be placed in `target`.
 
 ## Changelog
+
+#### n/a   - 2013-11-16
+
+* Now available via Maven Central
 
 #### 0.6.0 - 2013-10-08
 
