@@ -1,22 +1,38 @@
 # UASparser
 
-A fast User Agent parser library
+A fast User Agent parser library, using data from [user-agent-string.info](http://user-agent-string.info/)
 
 ## Install
 
-UASparser is available via Maven Central under the group ID `cz.mallat.uasparser` and artifact ID `uasparser`. 
-View the [latest pom.xml](http://search.maven.org/#artifactdetails%7Ccz.mallat.uasparser%7Cuasparser%7C0.6.0%7Cjar).
+UASparser is available via Maven Central: 
+
+* Group ID: `cz.mallat.uasparser`
+* Artifact ID: `uasparser`
+
+View the latest [artifact info](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22uasparser%22).
 
 ## Usage
 
 Simply use UASparser or any of its subclasses like so:
 
 ```
-UASparser parser = new UASparser("uas.ini");
+UASparser parser = new UASparser();
 OnlineUpdater updater = new OnlineUpdater(parser);
 UserAgentInfo info = parser.parse("Mozilla/4.0 (compatible; MSIE 7.0;
 Windows NT 5.1; )");
 ```
+
+This will create a new parser and initialize it with a bundled copy of the database. The 
+``OnlineUpdater`` will then asynchronously fetch the latest database in the 
+background, making it available after a few seconds and caching it locally as well. See
+it's source for more on how it works. 
+
+In addition, there are a few different parser classes available:
+
+* ``UASparser`` - Default parser, thread-safe
+* ``MultithreadedUASparser`` - A faster variant of UASparser, uses a bit more memory
+* ``SingleThreadedUASparser`` - Non-threadsafe variant, ideal for Hadoop and similar use cases
+* ``BrowserFamilyParser`` - UASparser subclass which _only_ returns the browser family string
 
 ## Building
 
