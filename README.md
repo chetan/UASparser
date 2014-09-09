@@ -59,6 +59,10 @@ Binaries will be placed in `target`.
 
 ## Changelog
 
+#### 0.6.1 - 2014-09-09
+
+* Fixed device detection logic (issue #12, #13)
+
 #### n/a   - 2013-11-16
 
 * Now available via Maven Central
