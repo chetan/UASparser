@@ -25,8 +25,8 @@
   </licenses>
 
   <scm>
-    <url>https://github.com/chetan/UASparser</url>
-    <connection>scm:git:git://github.com/chetan/UASparser.git</connection>
+    <url>git@github.com:chetan/UASparser.git</url>
+    <connection>scm:git:git@github.com:chetan/UASparser.git</connection>
     <developerConnection>scm:git:git@github.com:chetan/UASparser.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
