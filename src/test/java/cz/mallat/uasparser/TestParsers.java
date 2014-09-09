@@ -66,7 +66,7 @@ public class TestParsers {
     private void testRobotAgents(UASparser parser) throws IOException {
         UserAgentInfo uai = parser.parse("Mozilla/5.0 (compatible; 008/0.83; http://www.80legs.com/spider.html;) Gecko/2008032620");
         assertTrue(uai.isRobot());
-        assertEquals("Computational Crawling, LP", uai.getUaCompany());
+        assertEquals("Datafiniti, LLC.", uai.getUaCompany());
 
         uai = parser.parse("Googlebot/2.1 (+http://www.googlebot.com/bot.html)");
         assertFalse(uai.isRobot()); // not currently detected
