@@ -107,4 +107,16 @@ class BrowserEntry {
 		this.infoUrl = infoUrl;
 	}
 
+    @Override
+    public String toString() {
+        return  "Browser: \n" +
+                "  Family: " + family + "\n" +
+                "  Type: " + type + "\n" +
+                "  URL: " + url + "\n" +
+                "  Company: " + company + "\n" +
+                "  Company URL: " + companyUrl + "\n" +
+                "  ICO: " + ico + "\n" +
+                "  Info URL: " + infoUrl;
+    }
+
 }

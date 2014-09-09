@@ -5,9 +5,9 @@ import java.util.List;
 
 /**
  * JavaBean that holds the data from the [os] section in the data file
- * 
+ *
  * @author oli
- * 
+ *
  */
 class OsEntry {
 
@@ -75,5 +75,16 @@ class OsEntry {
 	public void setIco(String ico) {
 		this.ico = ico;
 	}
+
+    @Override
+    public String toString() {
+        return  "Operating System: \n" +
+                "  Family: " + family + "\n" +
+                "  Name: " + name + "\n" +
+                "  URL: " + url + "\n" +
+                "  Company: " + company + "\n" +
+                "  Company URL: " + companyUrl + "\n" +
+                "  ICO: " + ico;
+    }
 
 }

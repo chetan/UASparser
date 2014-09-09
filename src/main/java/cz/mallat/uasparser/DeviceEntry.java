@@ -5,9 +5,9 @@ import java.util.List;
 
 /**
  * Java bean that holds the data from the [device] section in the data file.
- * 
+ *
  * @author Felix Siegrist, Inventage AG
- * 
+ *
  */
 class DeviceEntry {
 
@@ -45,5 +45,13 @@ class DeviceEntry {
 	public void setInfoUrl(String infoUrl) {
 		this.infoUrl = infoUrl;
 	}
+
+    @Override
+    public String toString() {
+        return  "Device: \n" +
+                "  Type: " + type + "\n" +
+                "  ICO: " + ico + "\n" +
+                "  Info URL: " + infoUrl;
+    }
 
 }

@@ -35,11 +35,11 @@ public class UserAgentInfo {
 	public boolean isRobot() {
 	    return UASparser.ROBOT.equals(type);
 	}
-	
+
 	public boolean hasOsInfo() {
 		return osEntry != null;
 	}
-	
+
 	public boolean hasDeviceInfo() {
 		return deviceEntry != null;
 	}
@@ -292,7 +292,7 @@ public class UserAgentInfo {
     public String getBrowserVersionInfo() {
         return browserVersionInfo;
     }
-    
+
     /**
 	 * Retrieve the type of the device, if available. Can be one of the following:
 	 *
@@ -308,9 +308,9 @@ public class UserAgentInfo {
 	 * @return {@link String} type
 	 */
 	public String getDeviceType() {
-    	return deviceEntry != null ? deviceEntry.getType() : UNKNOWN; 
+    	return deviceEntry != null ? deviceEntry.getType() : UNKNOWN;
     }
-    
+
     /**
      * Retrieve the icon filename, if available; i.e., given the UA:
      *
@@ -322,9 +322,9 @@ public class UserAgentInfo {
      * @see <a href="http://user-agent-string.info/download">http://user-agent-string.info/download</a>
      */
 	public String getDeviceIcon() {
-    	return deviceEntry != null ? deviceEntry.getIco() : UNKNOWN; 
+    	return deviceEntry != null ? deviceEntry.getIco() : UNKNOWN;
     }
-    
+
 	/**
      * Retrieve the URL path for the given UA on user-agent-string.info; i.e., given the UA:
      *
@@ -335,7 +335,7 @@ public class UserAgentInfo {
      * @return {@link String} URL path
      */
 	public String getDeviceInfoUrl() {
-    	return deviceEntry != null ? UASparser.INFO_URL + deviceEntry.getInfoUrl() : UNKNOWN; 
+    	return deviceEntry != null ? UASparser.INFO_URL + deviceEntry.getInfoUrl() : UNKNOWN;
     }
 
 
@@ -356,9 +356,43 @@ public class UserAgentInfo {
     public void setRobotEntry(RobotEntry robotEntry) {
         this.robotEntry = robotEntry;
     }
-    
+
     public void setDeviceEntry(DeviceEntry deviceEntry) {
     	this.deviceEntry = deviceEntry;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Name: " + getUaName() + "\n");
+        sb.append("Type: " + getType() + "\n");
+
+        if (robotEntry != null) {
+            sb.append(robotEntry + "\n");
+        } else {
+            sb.append("Robot: no\n");
+        }
+
+        if (browserEntry != null) {
+            sb.append(browserEntry + "\n");
+        } else {
+            sb.append("Browser: no\n");
+        }
+
+        if (osEntry != null) {
+            sb.append(osEntry + "\n");
+        } else {
+            sb.append("Operating System: n/a\n");
+        }
+
+        if (deviceEntry != null) {
+            sb.append(deviceEntry + "\n");
+        } else {
+            sb.append("Device: n/a\n");
+        }
+
+        return sb.toString();
     }
 
 }

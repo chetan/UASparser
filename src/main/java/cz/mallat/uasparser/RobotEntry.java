@@ -5,9 +5,9 @@ import java.util.List;
 
 /**
  * JavaBean that holds the data from the [robots] section in the data file
- * 
+ *
  * @author oli
- * 
+ *
  */
 class RobotEntry {
 
@@ -104,6 +104,19 @@ class RobotEntry {
 
 	public void setInfoUrl(String infoUrl) {
 		this.infoUrl = infoUrl;
+	}
+
+	@Override
+	public String toString() {
+	    return  "Robot: \n" +
+	            "  Company: " + company + "\n" +
+	            "  Company URL: " + companyUrl + "\n" +
+	            "  Family: " + family + "\n" +
+	            "  ICO: " + ico + "\n" +
+	            "  Info URL: " + infoUrl  + "\n" +
+	            "  OS ID: " + osId + "\n" +
+	            "  URL: " + url + "\n" +
+	            "  User Agent: " + userAgentString;
 	}
 
 }
