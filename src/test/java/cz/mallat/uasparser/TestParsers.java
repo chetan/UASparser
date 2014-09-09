@@ -48,6 +48,34 @@ public class TestParsers {
     }
 
     /**
+     * Tests for various device types
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    @Test
+    public void testDeviceUA() throws IOException, InterruptedException {
+
+        if (!this.testDeviceInfo) {
+            return;
+        }
+
+        UASparser p = new UASparser(getDataInputStream());
+
+        UserAgentInfo info = p.parse("Mozilla/5.0 (Linux; U; Android 4.0.4; en-au; GT-N7000 Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 Maxthon/4.1.1.2000");
+        assertEquals("Smartphone", info.getDeviceType());
+
+        info = p.parse("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36 Mozilla/4.0 (compatible; MSIE 5.0; Windows NT;)");
+        assertEquals("Personal computer", info.getDeviceType());
+
+        info = p.parse("Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
+        assertEquals("Smartphone", info.getDeviceType());
+
+        info = p.parse("Mozilla/5.0 (compatible; 008/0.83; http://www.80legs.com/spider.html;) Gecko/2008032620");
+        assertEquals("Other", info.getDeviceType());
+    }
+
+    /**
      * Get database file to test against as an {@link InputStream}
      * @return
      */
@@ -66,7 +94,13 @@ public class TestParsers {
     private void testRobotAgents(UASparser parser) throws IOException {
         UserAgentInfo uai = parser.parse("Mozilla/5.0 (compatible; 008/0.83; http://www.80legs.com/spider.html;) Gecko/2008032620");
         assertTrue(uai.isRobot());
-        assertEquals("Datafiniti, LLC.", uai.getUaCompany());
+        if (this.testDeviceInfo) {
+            assertEquals("Datafiniti, LLC.", uai.getUaCompany());
+        } else {
+            // when using the 'old db', this may be either of the two strings..
+            // on a normal run/test, it will be Computational, but the caching test will result in Datafiniti..
+            assertTrue(uai.getUaCompany().equals("Computational Crawling, LP") || uai.getUaCompany().equals("Datafiniti, LLC."));
+        }
 
         uai = parser.parse("Googlebot/2.1 (+http://www.googlebot.com/bot.html)");
         assertFalse(uai.isRobot()); // not currently detected

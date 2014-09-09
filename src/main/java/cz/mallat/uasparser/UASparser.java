@@ -27,6 +27,9 @@ public class UASparser {
 
     static final String INFO_URL = "http://user-agent-string.info";
     static final String ROBOT = "Robot";
+    static final Long DEVICE_ID_OTHER = 1L;
+    static final Long DEVICE_ID_DESKTOP = 2L;
+    static final Long DEVICE_ID_SMARTPHONE = 3L;
 
     protected Map<String, RobotEntry> robotsMap;
     protected Map<Long, OsEntry> osMap;
@@ -93,26 +96,55 @@ public class UASparser {
         if (useragent == null) {
             return unknownAgentInfo;
         }
-        
+
         UserAgentInfo uaInfo = new UserAgentInfo();
         useragent = useragent.trim();
 
-        // check that the data maps are up-to-date
+        // check that the data maps are up-to-date (deprecated)
         checkDataMaps();
 
         // first check if it's a robot
-        processRobot(useragent, uaInfo);
-        if (!uaInfo.isRobot()) {
-            // it's not a robot, so search for a browser on the browser regex patterns
-            processBrowserRegex(useragent, uaInfo);
-            if (!uaInfo.hasOsInfo()) {
-                // search the OS regex patterns for the used OS
-                processOsRegex(useragent, uaInfo);
-            }
-            // search the device regex patterns to set the according device
-            processDeviceRegex(useragent, uaInfo);
+        if (processRobot(useragent, uaInfo)) {
+            return uaInfo;
         }
+
+        // it's not a robot, so search for a browser on the browser regex patterns
+        processBrowserRegex(useragent, uaInfo);
+        if (!uaInfo.hasOsInfo()) {
+            // search the OS regex patterns for the used OS
+            processOsRegex(useragent, uaInfo);
+        }
+
+        // search the device regex patterns to set the according device
+        processDeviceRegex(useragent, uaInfo);
+        if (!uaInfo.hasDeviceInfo()) {
+            guessDeviceType(uaInfo);
+        }
+
         return uaInfo;
+    }
+
+    /**
+     * Determine device type based on UA type field
+     * @param uaInfo
+     */
+    protected void guessDeviceType(UserAgentInfo uaInfo) {
+        if (compiledDeviceRegMap == null || deviceMap == null) {
+            return;
+        }
+
+        String type = uaInfo.getType();
+        if (type == null || type.isEmpty()) {
+            return;
+        }
+
+        if (type.equals("Other") || type.equals("Library") || type.equals("Useragent Anonymizer")) {
+            uaInfo.setDeviceEntry(deviceMap.get(DEVICE_ID_OTHER));
+        } else if (type.equals("Mobile Browser") || type.equals("Wap Browser")) {
+            uaInfo.setDeviceEntry(deviceMap.get(DEVICE_ID_SMARTPHONE));
+        } else {
+            uaInfo.setDeviceEntry(deviceMap.get(DEVICE_ID_DESKTOP));
+        }
     }
 
     /**
@@ -180,20 +212,29 @@ public class UASparser {
     }
 
     /**
-     * Checks if the useragent comes from a robot. if yes copies all the data to the result object
+     * Checks if the User Agent matches that of a known Robot (crawler or other automated agent)
      *
      * @param useragent
      * @param uaInfo
      */
-    protected void processRobot(String useragent, UserAgentInfo uaInfo) {
-        if (robotsMap.containsKey(useragent)) {
-            uaInfo.setType(ROBOT);
-            RobotEntry robotEntry = robotsMap.get(useragent);
-            uaInfo.setRobotEntry(robotEntry);
-            if (robotEntry.getOsId() != null) {
-                uaInfo.setOsEntry(osMap.get(robotEntry.getOsId()));
-            }
+    protected boolean processRobot(String useragent, UserAgentInfo uaInfo) {
+        // Robots UAs must match *exactly*, hence we use a simple hash lookup and not a regex match
+        if (!robotsMap.containsKey(useragent)) {
+            return false;
         }
+
+        uaInfo.setType(ROBOT);
+        RobotEntry robotEntry = robotsMap.get(useragent);
+        uaInfo.setRobotEntry(robotEntry);
+        if (robotEntry.getOsId() != null) {
+            uaInfo.setOsEntry(osMap.get(robotEntry.getOsId()));
+        }
+
+        if (compiledDeviceRegMap != null && deviceMap != null) {
+            // Set device to 'other'
+            uaInfo.setDeviceEntry(deviceMap.get(DEVICE_ID_OTHER));
+        }
+        return true;
     }
 
     /**
