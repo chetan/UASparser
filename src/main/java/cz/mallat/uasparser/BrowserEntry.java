@@ -5,14 +5,15 @@ import java.util.List;
 
 /**
  * JavaBean that holds the data from the [browser] section in the data file
- * 
+ *
  * @author oli
- * 
+ *
  */
 class BrowserEntry {
 
 	private Long type;
 	private String family;
+	@Deprecated
 	private String name;
 	private String url;
 	private String company;
@@ -48,10 +49,20 @@ class BrowserEntry {
 		this.type = type;
 	}
 
+	/**
+	 * This field is never used
+	 * @return
+	 */
+	@Deprecated
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * This field is never used
+	 * @param name
+	 */
+	@Deprecated
 	public void setName(String name) {
 		this.name = name;
 	}
