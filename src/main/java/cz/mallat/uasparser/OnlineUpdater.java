@@ -78,6 +78,9 @@ public class OnlineUpdater extends Thread {
         updateInterval = units.toMillis(interval);
 
         init();
+
+        if (true) { return; } // DISABLED - upstream db is no longer free and updates are impossible
+
         start();
     }
 
@@ -86,7 +89,10 @@ public class OnlineUpdater extends Thread {
      */
     public void init() {
 
-        if (this.cacheFile.exists()) {
+        if (false && this.cacheFile.exists()) {
+            // DISABLED - upstream db is no longer free and updates are impossible and
+            //            cached db is probably bad by now, don't use it.
+            if (true) { return; }
             try {
                 parser.loadDataFromFile(cacheFile);
                 this.currentVersion =

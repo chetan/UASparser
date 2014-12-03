@@ -5,7 +5,7 @@ A fast User Agent parser library, using data from [user-agent-string.info](http:
 <hr>
 **NOTE:** As of December 1, 2014, the upstream User Agent database is no longer free and the old update URL is returning *bad data*. 
 
-This means that the `OnlineUpdater`, `OnlineUpdateUASparser`, and `CachingOnlineUpdateUASparser` APIs will retrieve an incorrect database and **must be disabled immediately**.
+This means that the `OnlineUpdater`, `OnlineUpdateUASparser`, and `CachingOnlineUpdateUASparser` APIs will retrieve an incorrect database and **must be disabled immediately**. If you were using any of these methods, please update your code as in the example below. 
 
 You may continue to use this library with the bundled UA database, as long as updating is disabled. 
 <hr>
