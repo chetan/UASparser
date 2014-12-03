@@ -63,6 +63,10 @@ Binaries will be placed in `target`.
 
 ## Changelog
 
+#### 0.6.2 - 2014-12-03
+
+* Disabled online updates (for now)
+
 #### 0.6.1 - 2014-09-09
 
 * Fixed device detection logic (issue #12, #13)

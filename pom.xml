@@ -7,7 +7,7 @@
   <groupId>cz.mallat.uasparser</groupId>
   <artifactId>uasparser</artifactId>
 
-  <version>0.6.1</version>
+  <version>0.6.2</version>
   <packaging>jar</packaging>
 
   <name>UASparser</name>
