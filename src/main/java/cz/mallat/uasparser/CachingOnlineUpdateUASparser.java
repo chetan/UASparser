@@ -47,7 +47,7 @@ public class CachingOnlineUpdateUASparser extends OnlineUpdateUASparser {
 		}
 
 		File propFile = getPropertiesFile();
-		if (propFile.exists()) {
+		if (false && propFile.exists()) {
 			FileInputStream fis = new FileInputStream(getPropertiesFile());
 			try {
 				prop.load(fis);
@@ -73,6 +73,11 @@ public class CachingOnlineUpdateUASparser extends OnlineUpdateUASparser {
 	 */
 	@Override
 	protected synchronized void checkDataMaps() throws IOException {
+        if (true) {
+            // DISABLED - upstream db is no longer free and updates are impossible
+            System.err.println("WARNING! Online updates have been disabled; see https://github.com/chetan/UASparser");
+            return;
+        }
 		if (lastUpdateCheck == 0 || lastUpdateCheck < System.currentTimeMillis() - UPDATE_INTERVAL) {
 			String versionOnServer = getVersionFromServer();
 			if (currentVersion == null || versionOnServer.compareTo(currentVersion) > 0) {

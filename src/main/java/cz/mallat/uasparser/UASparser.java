@@ -101,7 +101,7 @@ public class UASparser {
         useragent = useragent.trim();
 
         // check that the data maps are up-to-date (deprecated)
-        // checkDataMaps(); // DISABLED - upstream db is no longer free and updates are impossible
+        checkDataMaps();
 
         // first check if it's a robot
         if (processRobot(useragent, uaInfo)) {

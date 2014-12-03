@@ -2,8 +2,8 @@ package cz.mallat.uasparser;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.net.ConnectException;
+import java.net.URL;
 
 import cz.mallat.uasparser.fileparser.PHPFileParser;
 
@@ -27,6 +27,11 @@ public class OnlineUpdateUASparser extends UASparser {
 	 */
 	@Override
 	protected synchronized void checkDataMaps() throws IOException {
+	    if (true) {
+	        // DISABLED - upstream db is no longer free and updates are impossible
+	        System.err.println("WARNING! Online updates have been disabled; see https://github.com/chetan/UASparser");
+	        return;
+	    }
 		if (lastUpdateCheck == 0 || lastUpdateCheck < System.currentTimeMillis() - UPDATE_INTERVAL) {
 			String versionOnServer = getVersionFromServer();
 			if (currentVersion == null || versionOnServer.compareTo(currentVersion) > 0) {
@@ -67,7 +72,7 @@ public class OnlineUpdateUASparser extends UASparser {
 		} catch (ConnectException e) {
                 	return "0";
 		}
-		
+
 		try {
 			byte[] buff = new byte[4048];
 			int len = is.read(buff);

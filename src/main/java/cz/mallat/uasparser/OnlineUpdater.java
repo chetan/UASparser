@@ -79,7 +79,11 @@ public class OnlineUpdater extends Thread {
 
         init();
 
-        if (true) { return; } // DISABLED - upstream db is no longer free and updates are impossible
+        if (true) {
+            // DISABLED - upstream db is no longer free and updates are impossible
+            System.err.println("WARNING! Online updates have been disabled; see https://github.com/chetan/UASparser");
+            return;
+        }
 
         start();
     }
