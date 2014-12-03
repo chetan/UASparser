@@ -2,6 +2,14 @@
 
 A fast User Agent parser library, using data from [user-agent-string.info](http://user-agent-string.info/)
 
+<hr>
+**NOTE:** As of December 1, 2014, the upstream User Agent database is no longer free and the old update URL is returning *bad data*. 
+
+This means that the `OnlineUpdater` and `OnlineUpdateUASparser` APIs will retrieve an incorrect database and **must be disabled immediately**.
+
+You may continue to use this library with the bundled UA database, as long as updating is disabled. 
+<hr>
+
 ## Install
 
 UASparser is available via Maven Central: 
@@ -17,15 +25,11 @@ Simply use UASparser or any of its subclasses like so:
 
 ```
 UASparser parser = new UASparser();
-OnlineUpdater updater = new OnlineUpdater(parser);
 UserAgentInfo info = parser.parse("Mozilla/4.0 (compatible; MSIE 7.0;
 Windows NT 5.1; )");
 ```
 
-This will create a new parser and initialize it with a bundled copy of the database. The 
-``OnlineUpdater`` will then asynchronously fetch the latest database in the 
-background, making it available after a few seconds and caching it locally as well. See
-it's source for more on how it works. 
+This will create a new parser and initialize it with a bundled copy of the database.
 
 In addition, there are a few different parser classes available:
 
