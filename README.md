@@ -24,7 +24,7 @@ View the latest [artifact info](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%
 Simply use UASparser or any of its subclasses like so:
 
 ```
-UASparser parser = new UASparser();
+UASparser parser = new UASparser(OnlineUpdater.getVendoredInputStream());
 UserAgentInfo info = parser.parse("Mozilla/4.0 (compatible; MSIE 7.0;
 Windows NT 5.1; )");
 ```
